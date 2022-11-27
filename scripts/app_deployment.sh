@@ -20,7 +20,7 @@ python -m unittest
 
 deactivate
 
-git push origin dev
+git push origin master
 
 echo "----------------------"
 echo "deployment successful"

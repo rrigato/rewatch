@@ -3,7 +3,7 @@ from datetime import date
 from typing import Optional
 
 
-class RewatchPost():
+class MessageBoardPost():
     """business rules representing a rewatch thread"""
     def __init__(self):
         """Initialize all attributes to None"""
@@ -32,7 +32,7 @@ class RewatchPost():
         if type(post_message) not in (
             str, type(None)):
             raise TypeError(
-                "RewatchPost - post_message datatype " +
+                "MessageBoardPost - post_message datatype " +
                 "must be a str or None"
             )
         self._post_message = post_message
@@ -46,7 +46,7 @@ class RewatchPost():
         if type(post_title) not in (
             str, type(None)):
             raise TypeError(
-                "RewatchPost - post_title datatype " +
+                "MessageBoardPost - post_title datatype " +
                 "must be a str or None"
             )
         self._post_title = post_title

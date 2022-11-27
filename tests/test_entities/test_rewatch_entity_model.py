@@ -1,10 +1,11 @@
 import unittest
 
+
 class TestRewatchEntityModel(unittest.TestCase):
     
-    def test_rewatch_post_bad_input(self):
+    def test_message_board_post_bad_input(self):
         """invalid datatypes for entity raise TypeError"""
-        from rewatch.entities.rewatch_entity_model import RewatchPost
+        from rewatch.entities.rewatch_entity_model import MessageBoardPost
 
         mock_invalid_types = [
             set(["a", "b"]),
@@ -16,13 +17,13 @@ class TestRewatchEntityModel(unittest.TestCase):
         ]
 
         object_properties = [
-            attr_name for attr_name in dir(RewatchPost())
+            attr_name for attr_name in dir(MessageBoardPost())
             if not attr_name.startswith("_")
         ]
         for mock_invalid_type in mock_invalid_types:
             with self.subTest(mock_invalid_type=mock_invalid_type):
 
-                mock_entity = RewatchPost()
+                mock_entity = MessageBoardPost()
                 
                 
                 

@@ -4,7 +4,9 @@
         {
             "label": "rewatch deployment",
             "type": "shell",
-            "command": ["scripts/app_deployment.sh"],
+            "command": [
+                "scripts/app_deployment.sh"
+            ],
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -12,7 +14,8 @@
                 "panel": "shared",
                 "showReuseMessage": true,
                 "clear": false
-            }
+            },
+            "problemMatcher": []
         }
     ]
 }

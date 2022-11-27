@@ -3,15 +3,15 @@ from copy import deepcopy
 from datetime import date
 from typing import List, Optional, Tuple
 
-from rewatch.entities.rewatch_entity_model import RewatchPost
+from rewatch.entities.rewatch_entity_model import MessageBoardPost
 
 
-def load_rewatch_posts() -> Tuple[
-    Optional[List[RewatchPost]], Optional[str]]:
-    """Loads the RewatchPost from persisted storage
+def load_message_board_posts() -> Tuple[
+    Optional[List[MessageBoardPost]], Optional[str]]:
+    """Loads the MessageBoardPost from persisted storage
     """
-    logging.info(f"load_rewatch_posts - invocation begin")
+    logging.info(f"load_message_board_posts - invocation begin")
     
-    logging.info(f"load_rewatch_posts - invocation end")
-    return(Tuple[Optional[List[RewatchPost]], Optional[str]])
+    logging.info(f"load_message_board_posts - invocation end")
+    return(Tuple[Optional[List[MessageBoardPost]], Optional[str]])
 

@@ -44,7 +44,8 @@ def mock_secret_config(
     mock_entity = SecretConfig()
 
     mock_entity.reddit_client_id = "mockclientid"
-    mock_entity.reddit_client_secret = "mockapivalue"    
+    # pragma: allowlist nextline secret
+    mock_entity.reddit_client_secret = "mockvalue"    
 
     for object_property in object_properties:
         assert getattr(

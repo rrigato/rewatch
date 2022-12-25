@@ -51,3 +51,24 @@ class MessageBoardPost():
             )
         self._post_title = post_title
 
+
+class SecretConfig():
+    """Any secrets and environment config"""
+    def __init__(self):
+        """Initialize all attributes to None"""
+        self.reddit_api_key = None
+
+    @property
+    def reddit_api_key(self) -> Optional[str]:
+        return(self._reddit_api_key)
+
+    @reddit_api_key.setter
+    def reddit_api_key(self, reddit_api_key: Optional[str]):
+        if type(reddit_api_key) not in (
+            str, type(None)):
+            raise RuntimeError(
+                "SecretConfig - reddit_api_key datatype " +
+                "must be a str or None"
+            )
+        self._reddit_api_key = reddit_api_key
+

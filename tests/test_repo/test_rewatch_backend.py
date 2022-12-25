@@ -19,19 +19,14 @@ class TestRewatchBackend(unittest.TestCase):
         ]
         self.assertIsNone(retrieval_error)
 
-    @unittest.skip("skipping for now")
+
+
     def test_load_secret_config(self):
         """Environment config successfully loaded"""
-        from rewatch.entities.rewatch_entity_model import MessageBoardPost
+        from fixtures.rewatch_fixtures import mock_secret_config
+        from rewatch.entities.rewatch_entity_model import SecretConfig
         from rewatch.repo.rewatch_backend import load_message_board_posts
+        
+        mock_secret_config()
 
-
-        message_board_posts, retrieval_error = load_message_board_posts()
-
-
-        [
-            self.assertIsInstance(message_board_post, MessageBoardPost) 
-            for message_board_post in message_board_posts
-        ]
-        self.assertIsNone(retrieval_error)
-
+    

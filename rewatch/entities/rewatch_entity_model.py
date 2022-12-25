@@ -66,7 +66,7 @@ class SecretConfig():
     def reddit_api_key(self, reddit_api_key: Optional[str]):
         if type(reddit_api_key) not in (
             str, type(None)):
-            raise RuntimeError(
+            raise TypeError(
                 "SecretConfig - reddit_api_key datatype " +
                 "must be a str or None"
             )

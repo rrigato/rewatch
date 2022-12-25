@@ -31,7 +31,7 @@ class TestRewatchEntityModel(unittest.TestCase):
                     with self.assertRaises(TypeError):
                         setattr(
                             mock_entity, 
-                            mock_invalid_type,
+                            object_property,
                             mock_invalid_type
                         )
 
@@ -61,10 +61,10 @@ class TestRewatchEntityModel(unittest.TestCase):
                 
                 
                 for object_property in object_properties:
-                    # with self.assertRaises(TypeError):
-                    setattr(
+                    with self.assertRaises(TypeError):
+                        setattr(
                             mock_entity, 
-                            mock_invalid_type,
+                            object_property,
                             mock_invalid_type
                         )
 

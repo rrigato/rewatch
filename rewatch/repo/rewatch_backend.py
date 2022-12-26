@@ -37,6 +37,13 @@ def _populate_secret_config(sdk_response: Dict) -> SecretConfig:
     secret_config.reddit_client_secret = deserialized_secret_string[
         "reddit_client_secret"
     ]
+    secret_config.reddit_password = deserialized_secret_string[
+        "toonamiratings_username"
+    ]
+    secret_config.reddit_username = deserialized_secret_string[
+        "toonamiratings_password"
+    ]
+    
     return(secret_config)
 
 

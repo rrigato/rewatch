@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import MagicMock, patch
 
 
 class TestRewatchBackend(unittest.TestCase):
@@ -20,13 +21,18 @@ class TestRewatchBackend(unittest.TestCase):
         self.assertIsNone(retrieval_error)
 
 
-
-    def test_load_secret_config(self):
+    @patch("boto3.client")
+    def test_load_secret_config(self, 
+        boto_client_mock: MagicMock):
         """Environment config successfully loaded"""
         from fixtures.rewatch_fixtures import mock_secret_config
         from rewatch.entities.rewatch_entity_model import SecretConfig
-        from rewatch.repo.rewatch_backend import load_message_board_posts
-        
-        mock_secret_config()
+        from rewatch.repo.rewatch_backend import load_secret_config
 
-    
+
+        secret_config = load_secret_config()
+
+
+        self.assertIsInstance(secret_config, SecretConfig)
+
+

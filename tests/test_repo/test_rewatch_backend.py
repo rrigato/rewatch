@@ -1,3 +1,5 @@
+from copy import deepcopy
+import json
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -29,10 +31,32 @@ class TestRewatchBackend(unittest.TestCase):
         from rewatch.entities.rewatch_entity_model import SecretConfig
         from rewatch.repo.rewatch_backend import load_secret_config
 
+        boto_client_mock.return_value.get_secret_value.return_value = deepcopy(
+            {
+                "Name": "prod/v1/credentials",
+                "SecretString": json.dumps(
+                    {                
+                        # pragma: allowlist nextline secret
+                        "reddit_client_secret": "mock0",
+                        "reddit_client_id": "mock1",
+                        "reddit_username": "mock2",
+                        # pragma: allowlist nextline secret
+                        "reddit_password": "mock3"
+                    }
+                )
+
+            }
+        )
+
 
         secret_config = load_secret_config()
 
+        get_secret_args, get_secret_kwargs = (
+            boto_client_mock.return_value.get_secret_value.call_args
+        )
 
         self.assertIsInstance(secret_config, SecretConfig)
+
+        self.assertIn("SecretId", get_secret_kwargs.keys())
 
 

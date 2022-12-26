@@ -39,9 +39,9 @@ class TestRewatchBackend(unittest.TestCase):
                         # pragma: allowlist nextline secret
                         "reddit_client_secret": "mock0",
                         "reddit_client_id": "mock1",
-                        "reddit_username": "mock2",
+                        "toonamiratings_username": "mock2",
                         # pragma: allowlist nextline secret
-                        "reddit_password": "mock3"
+                        "toonamiratings_password": "mock3"
                     }
                 )
 
@@ -58,5 +58,22 @@ class TestRewatchBackend(unittest.TestCase):
         self.assertIsInstance(secret_config, SecretConfig)
 
         self.assertIn("SecretId", get_secret_kwargs.keys())
+
+        
+        
+        populated_secret_properties = [
+            attr_name for attr_name in dir(secret_config)
+            if not attr_name.startswith("_")
+            and getattr(secret_config, attr_name) is not None
+        ]
+
+        self.assertEqual(
+            len(populated_secret_properties),
+            4,
+            msg="incorrect number of SecretConfig attributes populated"
+        )
+
+
+        
 
 

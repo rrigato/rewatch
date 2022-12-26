@@ -1,6 +1,6 @@
-from copy import deepcopy
 import json
 import unittest
+from copy import deepcopy
 from unittest.mock import MagicMock, patch
 
 
@@ -37,11 +37,12 @@ class TestRewatchBackend(unittest.TestCase):
                 "SecretString": json.dumps(
                     {                
                         # pragma: allowlist nextline secret
-                        "reddit_client_secret": "mock0",
-                        "reddit_client_id": "mock1",
-                        "toonamiratings_username": "mock2",
+                        "reddit_api_secret": "mock0",
                         # pragma: allowlist nextline secret
-                        "toonamiratings_password": "mock3"
+                        "reddit_api_key": "mock1",
+                        "reddit_api_username": "mock2",
+                        # pragma: allowlist nextline secret
+                        "reddit_api_password": "mock3"
                     }
                 )
 
@@ -67,6 +68,11 @@ class TestRewatchBackend(unittest.TestCase):
             and getattr(secret_config, attr_name) is not None
         ]
 
+        for populated_secret in populated_secret_properties:
+            self.assertIsNotNone(
+                getattr(secret_config, populated_secret),
+                msg=f"\n\n secrets_config property {populated_secret}"
+            )
         self.assertEqual(
             len(populated_secret_properties),
             4,

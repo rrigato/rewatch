@@ -1,8 +1,9 @@
 import json
-import boto3
 import logging
 from datetime import date
 from typing import Dict, List, Optional, Tuple
+
+import boto3
 
 from rewatch.entities.rewatch_entity_model import (MessageBoardPost,
                                                    SecretConfig)
@@ -31,17 +32,17 @@ def _populate_secret_config(sdk_response: Dict) -> SecretConfig:
     logging.info(f"_populate_secret_config - deserialized secrets")
     
     secret_config.reddit_client_id = deserialized_secret_string[
-        "reddit_client_id"
+        "reddit_api_key"
     ]
     
     secret_config.reddit_client_secret = deserialized_secret_string[
-        "reddit_client_secret"
+        "reddit_api_secret"
     ]
     secret_config.reddit_password = deserialized_secret_string[
-        "toonamiratings_username"
+        "reddit_api_username"
     ]
     secret_config.reddit_username = deserialized_secret_string[
-        "toonamiratings_password"
+        "reddit_api_password"
     ]
     
     return(secret_config)
@@ -70,3 +71,19 @@ def load_secret_config() -> Optional[SecretConfig]:
     except Exception as errror_suppression:
         logging.exception(errror_suppression)
         return(None)
+
+
+
+if __name__ == "__main__":
+    import logging
+    import os
+    from time import strftime
+    os.environ["AWS_REGION"] = "us-east-1"
+    logging.basicConfig(
+        format="%(levelname)s | %(asctime)s.%(msecs)03d" + strftime("%z") + " | %(message)s",
+        datefmt="%Y-%m-%dT%H:%M:%S", level=logging.INFO
+    )
+    secret_config = load_secret_config()
+
+    print(secret_config)
+

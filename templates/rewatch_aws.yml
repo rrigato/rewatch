@@ -1,0 +1,45 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+
+
+
+Description: |
+  AWS resources for rewatch application
+Parameters:
+
+
+  projectName:
+    Type: String
+    Default: rewatch
+
+
+Resources:
+
+  multiProjectTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: 'PK'
+          AttributeType: 'S'
+        -
+          AttributeName: 'SK'
+          AttributeType: 'S'
+
+      #On demand dynamodb
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        -
+          AttributeName: 'PK'
+          KeyType: 'HASH'
+        -
+          AttributeName: 'SK'
+          KeyType: 'RANGE'
+      #Automated backup for the last 35 days
+      PointInTimeRecoverySpecification: 
+        PointInTimeRecoveryEnabled: true
+
+      SSESpecification:
+          SSEEnabled: true
+      TableName: !Sub '${projectName}_shared_table'
+        

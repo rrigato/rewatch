@@ -69,21 +69,21 @@ def mock_dynamodb_query_response(
         {"Items":[
             {
                 "PK": "rewatch#showname",
-                "SK": 0,
+                "SK": "3005-11-09",
                 "post_title": "Episode 1 and 2",
                 "post_message": "Markdown for Episode 1 and 2"
 
             },
             {
                 "PK": "rewatch#showname",
-                "SK": 1,
+                "SK": "3005-11-16",
                 "post_title": "Episode 3 and 4",
                 "post_message": "Markdown for Episode 3 and 4"
 
             },
             {
                 "PK": "rewatch#showname",
-                "SK": 2,
+                "SK": "3005-11-23",
                 "post_title": "Episode 5 and 6",
                 "post_message": "Markdown for Episode 5 and 6"
 

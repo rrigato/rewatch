@@ -1,22 +1,46 @@
 import json
 import logging
+import os
 from datetime import date
 from typing import Dict, List, Optional, Tuple
 
 import boto3
+from boto3.dynamodb.conditions import Key
 
 from rewatch.entities.rewatch_entity_model import (MessageBoardPost,
                                                    SecretConfig)
 
 
 def load_message_board_posts() -> Tuple[
-    Optional[List[MessageBoardPost]], Optional[str]]:
+    Optional[List[MessageBoardPost]]]:
     """Loads the MessageBoardPost from persisted storage
+    None if unexpected error
+    [] if no MessageBoardPost entities were found
     """
     logging.info(f"load_message_board_posts - invocation begin")
-    
+    dynamodb_table = boto3.resource(
+        "dynamodb", 
+        os.environ.get("AWS_REGION")).Table(
+            "prod_toonami_ratings"
+        )
+
+    logging.info("load_message_board_posts - obtained table resource")
+
+    dynamodb_response = dynamodb_table.query(
+        KeyConditionExpression=Key("PK").eq(
+            "rewatch#")
+    )
+
+    logging.info("load_message_board_posts - obtained dynamodb_response")
+
+    if len(dynamodb_response["Items"]) == 0:
+        logging.info(
+            "load_message_board_posts - dynamodb_response Items list has no elements"
+        )
+        return([])
+
     logging.info(f"load_message_board_posts - invocation end")
-    return(Tuple[Optional[List[MessageBoardPost]], Optional[str]])
+    return(None)
 
 
 

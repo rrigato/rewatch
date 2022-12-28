@@ -6,21 +6,40 @@ from unittest.mock import MagicMock, patch
 
 class TestRewatchBackend(unittest.TestCase):
     
-    @unittest.skip("skipping for now")
-    def test_load_message_board_posts(self):
+    @patch("boto3.resource")
+    def test_load_message_board_posts(self,
+        boto3_resource_mock: MagicMock):
         """TODO - Stub for loading rewatch posts"""
+        from fixtures.rewatch_fixtures import mock_dynamodb_query_response
         from rewatch.entities.rewatch_entity_model import MessageBoardPost
         from rewatch.repo.rewatch_backend import load_message_board_posts
 
 
-        message_board_posts, retrieval_error = load_message_board_posts()
+
+        (   boto3_resource_mock.return_value.
+            Table.return_value.query.return_value
+        ) = ( 
+            mock_dynamodb_query_response()
+        )
+        message_board_posts = load_message_board_posts()
 
 
-        [
-            self.assertIsInstance(message_board_post, MessageBoardPost) 
-            for message_board_post in message_board_posts
-        ]
-        self.assertIsNone(retrieval_error)
+        # self.assertEqual(
+        #     len(mock_dynamodb_query_response()),
+        #     len(message_board_posts)
+        # )
+
+        args, kwargs = (
+            boto3_resource_mock.return_value.Table.
+            return_value.query.call_args
+        )
+
+        self.assertIn("KeyConditionExpression", kwargs.keys())
+        # [
+        #     self.assertIsInstance(message_board_post, MessageBoardPost) 
+        #     for message_board_post in message_board_posts
+        # ]
+        # self.assertIsNone(retrieval_error)
 
 
     @patch("boto3.client")

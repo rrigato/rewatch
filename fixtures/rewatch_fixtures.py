@@ -1,6 +1,7 @@
 import json
 from copy import deepcopy
 from datetime import date
+from typing import Dict
 
 
 from rewatch.entities.rewatch_entity_model import MessageBoardPost, SecretConfig
@@ -58,3 +59,38 @@ def mock_secret_config(
         )
     
     return(deepcopy(mock_entity))
+
+
+def mock_dynamodb_query_response(
+    ) -> Dict:
+    """https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Table.query
+    """
+    return(deepcopy(
+        {"Items":[
+            {
+                "PK": "rewatch#showname",
+                "SK": 0,
+                "post_title": "Episode 1 and 2",
+                "post_body": "Markdown for Episode 1 and 2"
+
+            },
+            {
+                "PK": "rewatch#showname",
+                "SK": 1,
+                "post_title": "Episode 3 and 4",
+                "post_body": "Markdown for Episode 3 and 4"
+
+            },
+            {
+                "PK": "rewatch#showname",
+                "SK": 2,
+                "post_title": "Episode 5 and 6",
+                "post_body": "Markdown for Episode 5 and 6"
+
+            }
+        ],
+        
+        "Count": 3
+        
+        }
+    ))

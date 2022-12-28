@@ -97,8 +97,23 @@ class TestRewatchBackend(unittest.TestCase):
             4,
             msg="incorrect number of SecretConfig attributes populated"
         )
-
-
         
 
+    @patch("boto3.client")
+    def test_submit_reddit_post(self, 
+        boto_client_mock: MagicMock):
+        """Environment config successfully loaded"""
+        from fixtures.rewatch_fixtures import mock_message_board_posts
+        from fixtures.rewatch_fixtures import mock_secret_config
+        from rewatch.entities.rewatch_entity_model import SecretConfig
+        from rewatch.repo.rewatch_backend import submit_reddit_post
+
+
+        submission_error = submit_reddit_post(
+            mock_message_board_posts(1)[0],
+            mock_secret_config()
+        )
+
+
+        self.assertIsNone(submission_error)
 

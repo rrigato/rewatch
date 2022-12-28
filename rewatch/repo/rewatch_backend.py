@@ -127,6 +127,19 @@ def load_secret_config() -> Optional[SecretConfig]:
 
 
 
+
+def submit_reddit_post(post_to_submit: MessageBoardPost, 
+    secret_config: SecretConfig) -> Optional[str]:
+    """submits post_to_submit as a reddit post
+    None if operation was successful, str error message otherwise
+    """
+    logging.info(f"submit_reddit_post - invocation begin")
+    
+    logging.info(f"submit_reddit_post - invocation end")
+    return(None)
+
+
+
 if __name__ == "__main__":
     import logging
     import os

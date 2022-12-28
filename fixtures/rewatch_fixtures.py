@@ -27,6 +27,8 @@ def mock_message_board_posts(
         mock_entity.post_date = date.fromisoformat("2014-01-04")
         mock_entity.post_message = f"mock post_message {entity_num}"
         mock_entity.post_title = f"mock post_title {entity_num}"
+
+        mock_entities_list.append(mock_entity)
         
     return(deepcopy(mock_entities_list))
 

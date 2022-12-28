@@ -24,10 +24,10 @@ class TestRewatchBackend(unittest.TestCase):
         message_board_posts = load_message_board_posts()
 
 
-        # self.assertEqual(
-        #     len(mock_dynamodb_query_response()),
-        #     len(message_board_posts)
-        # )
+        self.assertEqual(
+            len(mock_dynamodb_query_response()["Items"]),
+            len(message_board_posts)
+        )
 
         args, kwargs = (
             boto3_resource_mock.return_value.Table.
@@ -39,7 +39,7 @@ class TestRewatchBackend(unittest.TestCase):
         #     self.assertIsInstance(message_board_post, MessageBoardPost) 
         #     for message_board_post in message_board_posts
         # ]
-        # self.assertIsNone(retrieval_error)
+        
 
 
     @patch("boto3.client")

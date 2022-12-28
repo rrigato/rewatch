@@ -11,6 +11,32 @@ from rewatch.entities.rewatch_entity_model import (MessageBoardPost,
                                                    SecretConfig)
 
 
+
+
+def _populate_message_posts(dynamodb_query_response: Dict) -> List[MessageBoardPost]:
+    """populates entity from external persisted storage
+    """
+    logging.info(f"_populate_message_posts - invocation begin")
+    
+    message_board_posts: List[MessageBoardPost] = []
+
+    for dynamodb_item in dynamodb_query_response["Items"]:
+        
+        new_message_post = MessageBoardPost()
+
+        new_message_post.post_message = dynamodb_item["post_title"]
+        new_message_post.post_title = dynamodb_item["post_message"]
+
+        message_board_posts.append(new_message_post)
+
+    logging.info(
+        f"_populate_message_posts - len(message_board_posts) - " +
+        f"{len(message_board_posts)}")
+
+    return(message_board_posts)
+
+
+
 def load_message_board_posts() -> Tuple[
     Optional[List[MessageBoardPost]]]:
     """Loads the MessageBoardPost from persisted storage
@@ -18,17 +44,20 @@ def load_message_board_posts() -> Tuple[
     [] if no MessageBoardPost entities were found
     """
     logging.info(f"load_message_board_posts - invocation begin")
+
+    '''TODO - This was all stubbed make sure to 
+    validate e2e when external resources are spun up'''
     dynamodb_table = boto3.resource(
         "dynamodb", 
         os.environ.get("AWS_REGION")).Table(
-            "prod_toonami_ratings"
+            "rewatch_shared_table"
         )
 
     logging.info("load_message_board_posts - obtained table resource")
 
     dynamodb_response = dynamodb_table.query(
         KeyConditionExpression=Key("PK").eq(
-            "rewatch#")
+            "rewatch#showname")
     )
 
     logging.info("load_message_board_posts - obtained dynamodb_response")
@@ -39,8 +68,8 @@ def load_message_board_posts() -> Tuple[
         )
         return([])
 
-    logging.info(f"load_message_board_posts - invocation end")
-    return(None)
+    
+    return(_populate_message_posts(dynamodb_response))
 
 
 

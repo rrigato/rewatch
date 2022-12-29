@@ -9,7 +9,7 @@ class TestRewatchBackend(unittest.TestCase):
     @patch("boto3.resource")
     def test_load_message_board_posts(self,
         boto3_resource_mock: MagicMock):
-        """TODO - Stub for loading rewatch posts"""
+        """happy path loaded rewatch posts"""
         from fixtures.rewatch_fixtures import mock_dynamodb_query_response
         from rewatch.entities.rewatch_entity_model import MessageBoardPost
         from rewatch.repo.rewatch_backend import load_message_board_posts
@@ -40,6 +40,27 @@ class TestRewatchBackend(unittest.TestCase):
         #     for message_board_post in message_board_posts
         # ]
         
+    @patch("boto3.resource")
+    def test_load_message_board_posts_unexpected_error(
+        self,
+        boto3_resource_mock: MagicMock):
+        """unhappy path unexpected error suppressed"""
+        from fixtures.rewatch_fixtures import mock_dynamodb_query_response
+        from rewatch.entities.rewatch_entity_model import MessageBoardPost
+        from rewatch.repo.rewatch_backend import load_message_board_posts
+
+
+
+        (   boto3_resource_mock.return_value.
+            Table.return_value.query.side_effect
+        ) = RuntimeError( 
+            "Simulating sdk exception"
+        )
+        message_board_posts = load_message_board_posts()
+
+
+        self.assertIsNone(message_board_posts)
+
 
 
     @patch("boto3.client")

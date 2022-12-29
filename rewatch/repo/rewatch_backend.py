@@ -37,40 +37,44 @@ def _populate_message_posts(dynamodb_query_response: Dict) -> List[MessageBoardP
 
 
 
-def load_message_board_posts() -> Tuple[
-    Optional[List[MessageBoardPost]]]:
+def load_message_board_posts() -> Optional[
+        List[MessageBoardPost]]:
     """Loads the MessageBoardPost from persisted storage
     None if unexpected error
     [] if no MessageBoardPost entities were found
     """
-    logging.info(f"load_message_board_posts - invocation begin")
+    try:
 
-    '''TODO - This was all stubbed make sure to 
-    validate e2e when external resources are spun up'''
-    dynamodb_table = boto3.resource(
-        "dynamodb", 
-        os.environ.get("AWS_REGION")).Table(
-            "rewatch_shared_table"
+        
+        dynamodb_table = boto3.resource(
+            "dynamodb", 
+            os.environ.get("AWS_REGION")).Table(
+                "rewatch_shared_table"
+            )
+
+        logging.info("load_message_board_posts - obtained table resource")
+
+        '''TODO - 
+        Pass the current date to the partition key
+        '''
+        dynamodb_response = dynamodb_table.query(
+            KeyConditionExpression=Key("PK").eq(
+                "rewatch#2022-12-31")
         )
 
-    logging.info("load_message_board_posts - obtained table resource")
+        logging.info("load_message_board_posts - obtained dynamodb_response")
 
-    dynamodb_response = dynamodb_table.query(
-        KeyConditionExpression=Key("PK").eq(
-            "rewatch#showname")
-    )
-
-    logging.info("load_message_board_posts - obtained dynamodb_response")
-
-    if len(dynamodb_response["Items"]) == 0:
-        logging.info(
-            "load_message_board_posts - dynamodb_response Items list has no elements"
-        )
-        return([])
-
+        if len(dynamodb_response["Items"]) == 0:
+            logging.info(
+                "load_message_board_posts - dynamodb_response Items list has no elements"
+            )
+            return([])
     
-    return(_populate_message_posts(dynamodb_response))
+        return(_populate_message_posts(dynamodb_response))
 
+    except Exception as error_suppression:
+        logging.exception("load_message_board_posts - unexpected error")
+        return(None)
 
 
 def _populate_secret_config(sdk_response: Dict) -> SecretConfig:
@@ -149,7 +153,7 @@ if __name__ == "__main__":
         format="%(levelname)s | %(asctime)s.%(msecs)03d" + strftime("%z") + " | %(message)s",
         datefmt="%Y-%m-%dT%H:%M:%S", level=logging.INFO
     )
-    secret_config = load_secret_config()
+    repo_response = load_message_board_posts()
 
-    print(secret_config)
+    print(repo_response)
 

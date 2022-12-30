@@ -73,6 +73,7 @@ class TestRewatchBackend(unittest.TestCase):
         from rewatch.repo.rewatch_backend import load_secret_config
 
         mock_reddit_username = "mock2"
+        # pragma: allowlist nextline secret
         mock_reddit_password = "mock3"
         boto_client_mock.return_value.get_secret_value.return_value = deepcopy(
             {
@@ -84,7 +85,6 @@ class TestRewatchBackend(unittest.TestCase):
                         # pragma: allowlist nextline secret
                         "reddit_api_key": "mock1",
                         "reddit_api_username": mock_reddit_username,
-                        # pragma: allowlist nextline secret
                         "reddit_api_password": mock_reddit_password
                     }
                 )

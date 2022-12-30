@@ -1,8 +1,11 @@
+import base64
 import json
 import logging
 import os
 from datetime import date
 from typing import Dict, List, Optional, Tuple
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 import boto3
 from boto3.dynamodb.conditions import Key
@@ -132,6 +135,42 @@ def load_secret_config() -> Optional[SecretConfig]:
 
 
 
+def _retrieve_access_token(secret_config: SecretConfig) -> str:
+    """retrieves access token from reddit api
+    """
+    logging.info(f"_retrieve_access_token - invocation begin")
+    
+    
+    
+
+    token_post = Request("https://www.reddit.com/api/v1/access_token")
+
+    token_post.add_header("Authorization", base64.b64encode(
+        (f"{secret_config.reddit_client_id}:"+ 
+        f"{secret_config.reddit_client_secret}").encode(
+            "ascii"
+        )
+    ))
+
+    with urlopen(
+            url=token_post, data=urlencode({
+                "hello": "world"
+            }).encode("utf-8"), timeout=4
+        ) as api_response:
+        assert api_response.getcode() == 200, (
+            "_retrieve_access_token - "+ 
+            "api_response.getcode - " + str(api_response.getcode())
+        )
+
+        api_response.read()
+
+        logging.info(f"_retrieve_access_token - invocation end")
+        return(None)
+        # return(json.loads(api_response.read()))
+    
+
+
+
 def submit_reddit_post(post_to_submit: MessageBoardPost, 
     secret_config: SecretConfig) -> Optional[str]:
     """submits post_to_submit as a reddit post
@@ -140,7 +179,7 @@ def submit_reddit_post(post_to_submit: MessageBoardPost,
     logging.info(f"submit_reddit_post - invocation begin")
     
     logging.info(f"submit_reddit_post - invocation end")
-    return(None)
+    return(_retrieve_access_token(secret_config))
 
 
 

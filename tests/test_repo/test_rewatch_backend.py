@@ -121,7 +121,7 @@ class TestRewatchBackend(unittest.TestCase):
         )
         
 
-    @patch("urllib.request.urlopen")
+    @patch("rewatch.repo.rewatch_backend.urlopen")
     def test_submit_reddit_post(self, 
         mock_urlopen: MagicMock):
         """Environment config successfully loaded"""
@@ -130,19 +130,30 @@ class TestRewatchBackend(unittest.TestCase):
         from rewatch.entities.rewatch_entity_model import SecretConfig
         from rewatch.repo.rewatch_backend import submit_reddit_post
 
+        mockToken = "mock0"
+        read_mock = MagicMock(side_effect=(
+                {
+                    "access_token": mockToken
+                },
+                json.dumps(
+                    {
+                        "success": True
+                    }
+                ).encode("utf-8")
+            )
+        )
         (
             mock_urlopen.return_value.__enter__.
-            return_value.getcode.return_value
-        ) = 200
+            return_value.getcode.side_effect
+        ) = (200, 200)
 
         (
             mock_urlopen.return_value.__enter__.
-            return_value.read.return_value
-        ) = json.dumps(
-            {
-                "success": True
-            }
-        ).encode("utf-8")
+            return_value.read
+            # .side_effect
+        ) = read_mock 
+        
+        
 
 
         submission_error = submit_reddit_post(
@@ -153,5 +164,6 @@ class TestRewatchBackend(unittest.TestCase):
 
         self.assertIsNone(submission_error)
 
-        
+
+        read_mock.assert_called()        
 

@@ -72,6 +72,8 @@ class TestRewatchBackend(unittest.TestCase):
         from rewatch.entities.rewatch_entity_model import SecretConfig
         from rewatch.repo.rewatch_backend import load_secret_config
 
+        mock_reddit_username = "mock2"
+        mock_reddit_password = "mock3"
         boto_client_mock.return_value.get_secret_value.return_value = deepcopy(
             {
                 "Name": "prod/v1/credentials",
@@ -81,9 +83,9 @@ class TestRewatchBackend(unittest.TestCase):
                         "reddit_api_secret": "mock0",
                         # pragma: allowlist nextline secret
                         "reddit_api_key": "mock1",
-                        "reddit_api_username": "mock2",
+                        "reddit_api_username": mock_reddit_username,
                         # pragma: allowlist nextline secret
-                        "reddit_api_password": "mock3"
+                        "reddit_api_password": mock_reddit_password
                     }
                 )
 
@@ -120,6 +122,18 @@ class TestRewatchBackend(unittest.TestCase):
             msg="incorrect number of SecretConfig attributes populated"
         )
         
+        self.assertEqual(
+            secret_config.reddit_username,
+            mock_reddit_username,
+            msg="\n\ne2e bug where username not populated correctly"
+        )
+        self.assertEqual(
+            secret_config.reddit_password,
+            mock_reddit_password,
+            msg="\n\ne2e bug where password not populated correctly"
+        )
+
+
 
     @patch("rewatch.repo.rewatch_backend.urlopen")
     def test_submit_reddit_post(self, 
@@ -131,10 +145,16 @@ class TestRewatchBackend(unittest.TestCase):
         from rewatch.repo.rewatch_backend import submit_reddit_post
 
         mockToken = "mock0"
+        get_code_mock = MagicMock(
+            side_effect=(200, 200)
+        )
         read_mock = MagicMock(side_effect=(
-                {
-                    "access_token": mockToken
-                },
+                json.dumps(
+                    {
+                        "access_token": mockToken
+                    }
+                ).encode("utf-8")
+                ,
                 json.dumps(
                     {
                         "success": True
@@ -145,12 +165,11 @@ class TestRewatchBackend(unittest.TestCase):
         (
             mock_urlopen.return_value.__enter__.
             return_value.getcode.side_effect
-        ) = (200, 200)
+        ) = get_code_mock
 
         (
             mock_urlopen.return_value.__enter__.
             return_value.read
-            # .side_effect
         ) = read_mock 
         
         

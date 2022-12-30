@@ -99,10 +99,10 @@ def _populate_secret_config(sdk_response: Dict) -> SecretConfig:
         "reddit_api_secret"
     ]
     secret_config.reddit_password = deserialized_secret_string[
-        "reddit_api_username"
+        "reddit_api_password"
     ]
     secret_config.reddit_username = deserialized_secret_string[
-        "reddit_api_password"
+        "reddit_api_username"
     ]
     
     return(secret_config)
@@ -148,13 +148,15 @@ def _retrieve_access_token(secret_config: SecretConfig) -> str:
     token_post.add_header("Authorization", base64.b64encode(
         (f"{secret_config.reddit_client_id}:"+ 
         f"{secret_config.reddit_client_secret}").encode(
-            "ascii"
+            "utf-8"
         )
     ))
 
     with urlopen(
             url=token_post, data=urlencode({
-                "hello": "world"
+                "grant_type": "password",
+                "password": secret_config.reddit_password,
+                "username": secret_config.reddit_username
             }).encode("utf-8"), timeout=4
         ) as api_response:
         assert api_response.getcode() == 200, (
@@ -162,11 +164,9 @@ def _retrieve_access_token(secret_config: SecretConfig) -> str:
             "api_response.getcode - " + str(api_response.getcode())
         )
 
-        api_response.read()
 
         logging.info(f"_retrieve_access_token - invocation end")
-        return(None)
-        # return(json.loads(api_response.read()))
+        return(json.loads(api_response.read()))
     
 
 
@@ -192,7 +192,8 @@ if __name__ == "__main__":
         format="%(levelname)s | %(asctime)s.%(msecs)03d" + strftime("%z") + " | %(message)s",
         datefmt="%Y-%m-%dT%H:%M:%S", level=logging.INFO
     )
-    repo_response = load_message_board_posts()
+    loaded_secrets = load_secret_config()
+    repo_response = submit_reddit_post(None, loaded_secrets)
 
     print(repo_response)
 

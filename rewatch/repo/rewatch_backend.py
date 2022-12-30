@@ -145,12 +145,21 @@ def _retrieve_access_token(secret_config: SecretConfig) -> str:
 
     token_post = Request("https://www.reddit.com/api/v1/access_token")
 
-    token_post.add_header("Authorization", base64.b64encode(
+    token_post.add_header("Authorization", 
+    "Basic " + base64.b64encode(
         (f"{secret_config.reddit_client_id}:"+ 
         f"{secret_config.reddit_client_secret}").encode(
             "utf-8"
         )
-    ))
+    ).decode("utf-8"))
+
+    token_post.add_header("user-agent",
+        "Lambda:rewatch:v0.0.1 (by /u/toonamiratings)"
+    )
+
+    token_post.add_header("Content-Type",
+        "application/x-www-form-urlencoded"
+    )
 
     with urlopen(
             url=token_post, data=urlencode({

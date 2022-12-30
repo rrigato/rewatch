@@ -35,11 +35,12 @@ class TestRewatchBackend(unittest.TestCase):
         )
 
         self.assertIn("KeyConditionExpression", kwargs.keys())
-        # [
-        #     self.assertIsInstance(message_board_post, MessageBoardPost) 
-        #     for message_board_post in message_board_posts
-        # ]
+        [
+            self.assertIsInstance(message_board_post, MessageBoardPost) 
+            for message_board_post in message_board_posts
+        ]
         
+
     @patch("boto3.resource")
     def test_load_message_board_posts_unexpected_error(
         self,
@@ -120,14 +121,28 @@ class TestRewatchBackend(unittest.TestCase):
         )
         
 
-    @patch("boto3.client")
+    @patch("urllib.request.urlopen")
     def test_submit_reddit_post(self, 
-        boto_client_mock: MagicMock):
+        mock_urlopen: MagicMock):
         """Environment config successfully loaded"""
         from fixtures.rewatch_fixtures import mock_message_board_posts
         from fixtures.rewatch_fixtures import mock_secret_config
         from rewatch.entities.rewatch_entity_model import SecretConfig
         from rewatch.repo.rewatch_backend import submit_reddit_post
+
+        (
+            mock_urlopen.return_value.__enter__.
+            return_value.getcode.return_value
+        ) = 200
+
+        (
+            mock_urlopen.return_value.__enter__.
+            return_value.read.return_value
+        ) = json.dumps(
+            {
+                "success": True
+            }
+        ).encode("utf-8")
 
 
         submission_error = submit_reddit_post(
@@ -137,4 +152,6 @@ class TestRewatchBackend(unittest.TestCase):
 
 
         self.assertIsNone(submission_error)
+
+        
 

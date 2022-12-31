@@ -43,6 +43,21 @@ def create_reddit_post() -> Optional[str]:
         return("Error creating reddit post")
 
     logging.info(f"create_reddit_post - happy path")
-    
+
     return(None)
+
+
+
+if __name__ == "__main__":
+    from time import strftime
+    import logging
+    import os
+    os.environ["AWS_REGION"] = "us-east-1"
+    logging.basicConfig(
+        format="%(levelname)s | %(asctime)s.%(msecs)03d" + strftime("%z") + " | %(message)s",
+        datefmt="%Y-%m-%dT%H:%M:%S", level=logging.INFO
+    )
+    creation_result = create_reddit_post()    
+    logging.info(f"main - {creation_result}")
+    
 

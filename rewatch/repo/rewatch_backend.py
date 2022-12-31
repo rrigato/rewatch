@@ -3,7 +3,7 @@ from http.client import HTTPResponse
 import json
 import logging
 import os
-from datetime import date
+from datetime import date, datetime
 from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -65,12 +65,12 @@ def load_message_board_posts() -> Optional[
 
         logging.info("load_message_board_posts - obtained table resource")
 
-        '''TODO - 
-        Pass the current date to the partition key
-        '''
+
         dynamodb_response = dynamodb_table.query(
             KeyConditionExpression=Key("PK").eq(
-                "rewatch#2022-12-31")
+                "rewatch#" +
+                datetime.utcnow().strftime("%Y-%m-%d")
+            )
         )
 
         logging.info("load_message_board_posts - obtained dynamodb_response")

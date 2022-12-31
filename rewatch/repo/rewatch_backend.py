@@ -1,4 +1,5 @@
 import base64
+from http.client import HTTPResponse
 import json
 import logging
 import os
@@ -161,12 +162,20 @@ def _retrieve_access_token(secret_config: SecretConfig) -> str:
         "application/x-www-form-urlencoded"
     )
 
+    '''reddit api does not accept urllib urlencode for
+    whatever reason'''
+    encoded_post_body =(
+        "grant_type=password&" +
+        f"username={secret_config.reddit_username}&" +
+        f"password={secret_config.reddit_password}"
+    ).encode("utf-8")
+
+    api_response : HTTPResponse
+
     with urlopen(
-            url=token_post, data=urlencode({
-                "grant_type": "password",
-                "password": secret_config.reddit_password,
-                "username": secret_config.reddit_username
-            }).encode("utf-8"), timeout=4
+            url=token_post, 
+            data=encoded_post_body, 
+            timeout=4
         ) as api_response:
         assert api_response.getcode() == 200, (
             "_retrieve_access_token - "+ 
@@ -199,7 +208,7 @@ if __name__ == "__main__":
     os.environ["AWS_REGION"] = "us-east-1"
     logging.basicConfig(
         format="%(levelname)s | %(asctime)s.%(msecs)03d" + strftime("%z") + " | %(message)s",
-        datefmt="%Y-%m-%dT%H:%M:%S", level=logging.INFO
+        datefmt="%Y-%m-%dT%H:%M:%S", level=logging.DEBUG
     )
     loaded_secrets = load_secret_config()
     repo_response = submit_reddit_post(None, loaded_secrets)

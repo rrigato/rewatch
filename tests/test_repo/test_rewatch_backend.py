@@ -184,5 +184,5 @@ class TestRewatchBackend(unittest.TestCase):
         self.assertIsNone(submission_error)
 
 
-        read_mock.assert_called()        
+        self.assertEqual(read_mock.call_count, 2)
 

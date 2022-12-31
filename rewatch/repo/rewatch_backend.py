@@ -141,9 +141,6 @@ def _retrieve_access_token(secret_config: SecretConfig) -> str:
     """
     logging.info(f"_retrieve_access_token - invocation begin")
     
-    
-    
-
     token_post = Request("https://www.reddit.com/api/v1/access_token")
 
     token_post.add_header("Authorization", 
@@ -187,6 +184,52 @@ def _retrieve_access_token(secret_config: SecretConfig) -> str:
 
 
 
+def _reddit_post_submission(access_token: str, post_to_submit: MessageBoardPost) -> None:
+    """Orchestrates reddit api submission
+    """
+    logging.info(f"_reddit_post_submission - invocation begin")
+    submit_request = Request("https://oauth.reddit.com/api/submit")
+
+
+    submit_request.add_header("Authorization",
+        f"Bearer {access_token}"
+    )
+    
+    submit_request.add_header("Content-Type",
+        "application/x-www-form-urlencoded"
+    )
+    
+    submit_request.add_header("user-agent",
+        "Lambda:rewatch:v0.0.1 (by /u/toonamiratings)"
+    )
+
+    api_response : HTTPResponse
+
+    with urlopen(
+            url=submit_request, 
+            data=urlencode({
+                "kind": "self",
+                "sr": "test",
+                "text": "Sample automated post",
+                "title": "Sample reddit title",
+                "type": "json"
+            }).encode("utf-8"), 
+            timeout=4
+        ) as api_response:
+        response_body = json.loads(api_response.read())
+
+        assert response_body["success"] == True, (
+            "_reddit_post_submission - "+ 
+            "api_response.getcode - " + str(api_response.getcode())
+        )
+    
+    
+
+        logging.info(f"_reddit_post_submission - invocation end")
+        return(None)
+
+
+
 def submit_reddit_post(post_to_submit: MessageBoardPost, 
     secret_config: SecretConfig) -> Optional[str]:
     """submits post_to_submit as a reddit post
@@ -194,8 +237,11 @@ def submit_reddit_post(post_to_submit: MessageBoardPost,
     """
     logging.info(f"submit_reddit_post - invocation begin")
     
+    access_token = _retrieve_access_token(secret_config)
+
+    
     logging.info(f"submit_reddit_post - invocation end")
-    return(_retrieve_access_token(secret_config))
+    return(_reddit_post_submission(access_token, secret_config))
 
 
 
@@ -206,7 +252,7 @@ if __name__ == "__main__":
     os.environ["AWS_REGION"] = "us-east-1"
     logging.basicConfig(
         format="%(levelname)s | %(asctime)s.%(msecs)03d" + strftime("%z") + " | %(message)s",
-        datefmt="%Y-%m-%dT%H:%M:%S", level=logging.DEBUG
+        datefmt="%Y-%m-%dT%H:%M:%S", level=logging.INFO
     )
     loaded_secrets = load_secret_config()
     repo_response = submit_reddit_post(None, loaded_secrets)

@@ -162,29 +162,27 @@ def _retrieve_access_token(secret_config: SecretConfig) -> str:
         "application/x-www-form-urlencoded"
     )
 
-    '''reddit api does not accept urllib urlencode for
-    whatever reason'''
-    encoded_post_body =(
-        "grant_type=password&" +
-        f"username={secret_config.reddit_username}&" +
-        f"password={secret_config.reddit_password}"
-    ).encode("utf-8")
-
     api_response : HTTPResponse
 
     with urlopen(
             url=token_post, 
-            data=encoded_post_body, 
+            data=urlencode({
+                "grant_type": "password",
+                "scope": "submit",
+                "username": secret_config.reddit_username,
+                "password": secret_config.reddit_password
+            }).encode("utf-8"), 
             timeout=4
         ) as api_response:
+
         assert api_response.getcode() == 200, (
             "_retrieve_access_token - "+ 
             "api_response.getcode - " + str(api_response.getcode())
         )
 
 
-        logging.info(f"_retrieve_access_token - invocation end")
-        return(json.loads(api_response.read()))
+        logging.info(f"_retrieve_access_token - returning access_token")
+        return(json.loads(api_response.read())["access_token"])
     
 
 

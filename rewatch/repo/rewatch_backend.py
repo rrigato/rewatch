@@ -16,7 +16,7 @@ from rewatch.entities.rewatch_entity_model import (MessageBoardPost,
 
 
 
-def _user_agent_header() -> str:
+def user_agent_header() -> str:
     """thin wrapper for the user-agent http header
     """
     return("Lambda:rewatch:v0.0.1 (by /u/toonamiratings)")
@@ -159,7 +159,7 @@ def _retrieve_access_token(secret_config: SecretConfig) -> str:
     ).decode("utf-8"))
 
     token_post.add_header("user-agent",
-        _user_agent_header()
+        user_agent_header()
     )
 
     token_post.add_header("Content-Type",
@@ -207,7 +207,7 @@ def _reddit_post_submission(access_token: str, post_to_submit: MessageBoardPost)
     )
     
     submit_request.add_header("user-agent",
-        _user_agent_header()
+        user_agent_header()
     )
 
     api_response : HTTPResponse

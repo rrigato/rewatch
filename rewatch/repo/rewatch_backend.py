@@ -191,7 +191,10 @@ def _retrieve_access_token(secret_config: SecretConfig) -> str:
 
 
 
-def _reddit_post_submission(access_token: str, post_to_submit: MessageBoardPost) -> None:
+def _reddit_post_submission(
+        access_token: str,
+        post_to_submit: MessageBoardPost
+    ) -> None:
     """Orchestrates reddit api submission
     """
     logging.info(f"_reddit_post_submission - invocation begin")
@@ -217,8 +220,8 @@ def _reddit_post_submission(access_token: str, post_to_submit: MessageBoardPost)
             data=urlencode({
                 "kind": "self",
                 "sr": "test",
-                "text": "Sample automated post",
-                "title": "Sample reddit title",
+                "text": post_to_submit.post_message,
+                "title": post_to_submit.post_title,
                 "type": "json"
             }).encode("utf-8"), 
             timeout=4
@@ -249,7 +252,7 @@ def submit_reddit_post(post_to_submit: MessageBoardPost,
 
         
         logging.info(f"submit_reddit_post - invocation end")
-        return(_reddit_post_submission(access_token, secret_config))
+        return(_reddit_post_submission(access_token, post_to_submit))
 
     except Exception as error_suppression:
         logging.exception("submit_reddit_post - unexpected error")

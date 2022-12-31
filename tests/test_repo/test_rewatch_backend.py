@@ -5,6 +5,7 @@ from copy import deepcopy
 from unittest.mock import MagicMock, patch
 
 
+
 class TestRewatchBackend(unittest.TestCase):
 
     @patch("rewatch.repo.rewatch_backend.datetime")    
@@ -147,13 +148,15 @@ class TestRewatchBackend(unittest.TestCase):
 
     @patch("rewatch.repo.rewatch_backend.urlopen")
     def test_submit_reddit_post(self, 
-        mock_urlopen: MagicMock):
+        urlopen_mock: MagicMock):
         """Environment config successfully loaded"""
         from fixtures.rewatch_fixtures import mock_message_board_posts
         from fixtures.rewatch_fixtures import mock_secret_config
         from rewatch.entities.rewatch_entity_model import SecretConfig
         from rewatch.repo.rewatch_backend import submit_reddit_post
+        from urllib.parse import urlencode
 
+        mock_selected_post = mock_message_board_posts(1)[0]
         mockToken = "mock0"
         get_code_mock = MagicMock(
             side_effect=(200, 200)
@@ -173,12 +176,12 @@ class TestRewatchBackend(unittest.TestCase):
             )
         )
         (
-            mock_urlopen.return_value.__enter__.
+            urlopen_mock.return_value.__enter__.
             return_value.getcode.side_effect
         ) = get_code_mock
 
         (
-            mock_urlopen.return_value.__enter__.
+            urlopen_mock.return_value.__enter__.
             return_value.read
         ) = read_mock 
         
@@ -186,20 +189,36 @@ class TestRewatchBackend(unittest.TestCase):
 
 
         submission_error = submit_reddit_post(
-            mock_message_board_posts(1)[0],
+            mock_selected_post,
             mock_secret_config()
         )
 
 
         self.assertIsNone(submission_error)
 
+        urlopen_args, urlopen_kwargs = urlopen_mock.call_args
 
+        self.assertIn(
+            urlencode({
+                "text":
+                mock_selected_post.post_message}
+            ),
+            urlopen_kwargs["data"].decode("utf-8"),
+            msg="\n\n post_message not in post body"
+        )
+        self.assertIn(
+            urlencode({
+                "title": mock_selected_post.post_title
+            }),
+            urlopen_kwargs["data"].decode("utf-8"),
+            msg="\n\n post_title not in post body"
+        )
         self.assertEqual(read_mock.call_count, 2)
 
 
     @patch("rewatch.repo.rewatch_backend.urlopen")
     def test_submit_reddit_post_unhappy_path(self, 
-        mock_urlopen: MagicMock):
+        urlopen_mock: MagicMock):
         """Success is False on second api call"""
         from fixtures.rewatch_fixtures import mock_message_board_posts
         from fixtures.rewatch_fixtures import mock_secret_config
@@ -225,12 +244,12 @@ class TestRewatchBackend(unittest.TestCase):
             )
         )
         (
-            mock_urlopen.return_value.__enter__.
+            urlopen_mock.return_value.__enter__.
             return_value.getcode.side_effect
         ) = get_code_mock
 
         (
-            mock_urlopen.return_value.__enter__.
+            urlopen_mock.return_value.__enter__.
             return_value.read
         ) = read_mock 
         

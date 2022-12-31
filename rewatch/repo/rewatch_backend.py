@@ -235,14 +235,18 @@ def submit_reddit_post(post_to_submit: MessageBoardPost,
     """submits post_to_submit as a reddit post
     None if operation was successful, str error message otherwise
     """
-    logging.info(f"submit_reddit_post - invocation begin")
-    
-    access_token = _retrieve_access_token(secret_config)
+    try:
+        logging.info(f"submit_reddit_post - invocation begin")
+        
+        access_token = _retrieve_access_token(secret_config)
 
-    
-    logging.info(f"submit_reddit_post - invocation end")
-    return(_reddit_post_submission(access_token, secret_config))
+        
+        logging.info(f"submit_reddit_post - invocation end")
+        return(_reddit_post_submission(access_token, secret_config))
 
+    except Exception as error_suppression:
+        logging.exception("submit_reddit_post - unexpected error")
+        return("Unexpected submitting post")
 
 
 if __name__ == "__main__":
@@ -250,12 +254,14 @@ if __name__ == "__main__":
     import os
     from time import strftime
     os.environ["AWS_REGION"] = "us-east-1"
+    from fixtures.rewatch_fixtures import mock_message_board_posts
     logging.basicConfig(
         format="%(levelname)s | %(asctime)s.%(msecs)03d" + strftime("%z") + " | %(message)s",
         datefmt="%Y-%m-%dT%H:%M:%S", level=logging.INFO
     )
     loaded_secrets = load_secret_config()
-    repo_response = submit_reddit_post(None, loaded_secrets)
+    repo_response = submit_reddit_post(
+        mock_message_board_posts(1)[0], loaded_secrets)
 
     print(repo_response)
 

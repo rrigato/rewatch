@@ -186,3 +186,52 @@ class TestRewatchBackend(unittest.TestCase):
 
         self.assertEqual(read_mock.call_count, 2)
 
+
+    @patch("rewatch.repo.rewatch_backend.urlopen")
+    def test_submit_reddit_post_unhappy_path(self, 
+        mock_urlopen: MagicMock):
+        """Success is False on second api call"""
+        from fixtures.rewatch_fixtures import mock_message_board_posts
+        from fixtures.rewatch_fixtures import mock_secret_config
+        from rewatch.entities.rewatch_entity_model import SecretConfig
+        from rewatch.repo.rewatch_backend import submit_reddit_post
+
+        mockToken = "mock0"
+        get_code_mock = MagicMock(
+            side_effect=(200, 200)
+        )
+        read_mock = MagicMock(side_effect=(
+                json.dumps(
+                    {
+                        "access_token": mockToken
+                    }
+                ).encode("utf-8")
+                ,
+                json.dumps(
+                    {
+                        "success": False
+                    }
+                ).encode("utf-8")
+            )
+        )
+        (
+            mock_urlopen.return_value.__enter__.
+            return_value.getcode.side_effect
+        ) = get_code_mock
+
+        (
+            mock_urlopen.return_value.__enter__.
+            return_value.read
+        ) = read_mock 
+        
+        
+
+
+        submission_error = submit_reddit_post(
+            mock_message_board_posts(1)[0],
+            mock_secret_config()
+        )
+
+
+        self.assertIsInstance(submission_error, str)
+

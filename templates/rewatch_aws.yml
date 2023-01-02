@@ -79,7 +79,7 @@ Resources:
       Description: !Sub 'Batch lambda invokation ${projectName}'
 
       FunctionName: !Sub ${projectName}-handler
-      Handler: !Sub ${projectName}_external
+      Handler: !Sub ${projectName}_handler.${projectName}_external
 
       MemorySize: !Ref lambdaMemorySize
       PackageType: Zip

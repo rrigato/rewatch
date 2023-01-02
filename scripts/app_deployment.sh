@@ -7,6 +7,7 @@ export PROJECT_NAME="rewatch"
 export BUCKET_NAME="${PROJECT_NAME}-app-artifacts"
 export DEPLOYMENT_PACKAGE="${PROJECT_NAME}_deployment_package.zip"
 export FUNCTION_NAME="${PROJECT_NAME}-reddit-post"
+export REGION_NAME="us-east-1"
 
 
 
@@ -37,15 +38,17 @@ zip -u $DEPLOYMENT_PACKAGE -j handlers/${PROJECT_NAME}_handler.py  \
 
 
 aws s3api put-object --bucket $BUCKET_NAME \
-    --key $DEPLOYMENT_PACKAGE \
+    --region $REGION_NAME \
+    --key $PROJECT_NAME/$DEPLOYMENT_PACKAGE \
     --body $DEPLOYMENT_PACKAGE \
     --tagging "cloudformation=no&project=${PROJECT_NAME}&keep=yes"
 
 
 aws lambda update-function-code \
+    --region $REGION_NAME \
     --function-name  "${PROJECT_NAME}-handler" \
     --s3-bucket $BUCKET_NAME \
-    --s3-key $DEPLOYMENT_PACKAGE \
+    --s3-key $PROJECT_NAME/$DEPLOYMENT_PACKAGE \
     --no-cli-pager
 
 

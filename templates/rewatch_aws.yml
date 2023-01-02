@@ -19,7 +19,7 @@ Parameters:
 
   lambdaTimeout:
     Type: Number
-    Default: 5
+    Default: 10
     MinValue: 1
     MaxValue: 900
 

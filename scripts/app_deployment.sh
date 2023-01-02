@@ -36,11 +36,17 @@ zip -u $DEPLOYMENT_PACKAGE -j handlers/${PROJECT_NAME}_handler.py  \
     -x *__pycache__* --quiet
 
 
-# aws s3api put-object --bucket $BUCKET_NAME \
-#     --key $DEPLOYMENT_PACKAGE \
-#     --body $DEPLOYMENT_PACKAGE \
-#     --tagging "cloudformation_managed=no&project=${PROJECT_NAME}&prod=yes"
+aws s3api put-object --bucket $BUCKET_NAME \
+    --key $DEPLOYMENT_PACKAGE \
+    --body $DEPLOYMENT_PACKAGE \
+    --tagging "cloudformation=no&project=${PROJECT_NAME}&keep=yes"
 
+
+aws lambda update-function-code \
+    --function-name  "${PROJECT_NAME}-handler" \
+    --s3-bucket $BUCKET_NAME \
+    --s3-key $DEPLOYMENT_PACKAGE \
+    --no-cli-pager
 
 
 

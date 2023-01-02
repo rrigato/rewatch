@@ -9,7 +9,7 @@ Parameters:
 
   lambdaExecutionRoleName:
     Type: String
-    Default: tvratings_lambda_role
+    Default: rewatch_lambda_role
 
   lambdaMemorySize:
     Type: Number
@@ -68,26 +68,26 @@ Resources:
       BucketName: !Sub ${projectName}-app-artifacts
 
 
-  lambdaPythonFunction:
-    Type: AWS::Lambda::Function
-    Properties: 
+  # lambdaPythonFunction:
+  #   Type: AWS::Lambda::Function
+  #   Properties: 
 
-      Code:
-        S3Bucket: !Ref artifactBucket
-        S3Key: !Sub ${projectName}/${projectName}_deployment_package.zip
+  #     Code:
+  #       S3Bucket: !Ref artifactBucket
+  #       S3Key: !Sub ${projectName}/${projectName}_deployment_package.zip
 
-      Description: !Sub 'Batch lambda invokation ${projectName}'
+  #     Description: !Sub 'Batch lambda invokation ${projectName}'
 
-      FunctionName: !Sub ${projectName}-handler
-      Handler: !Sub ${projectName}_external
+  #     FunctionName: !Sub ${projectName}-handler
+  #     Handler: !Sub ${projectName}_external
 
-      MemorySize: !Ref lambdaMemorySize
-      PackageType: Zip
-      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${lambdaExecutionRoleName}
-      Runtime: !Ref pythonRuntime
-      Timeout: !Ref lambdaTimeout
-      TracingConfig: 
-        Mode: Active
+  #     MemorySize: !Ref lambdaMemorySize
+  #     PackageType: Zip
+  #     Role: !Sub arn:aws:iam::${AWS::AccountId}:role/${lambdaExecutionRoleName}
+  #     Runtime: !Ref pythonRuntime
+  #     Timeout: !Ref lambdaTimeout
+  #     TracingConfig: 
+  #       Mode: Active
 
 
 
@@ -96,23 +96,23 @@ Resources:
     Properties:
       TopicName: !Sub ${projectName}-error-topic
 
-  lambdaErrorAlarm:
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      #SNS topic arn to publish to if number of lambda errors is
-      #greater than 0
-      AlarmActions: 
-        - !Ref errorAlertTopic
-      AlarmDescription: !Sub ${projectName} Lambda Error alert
-      AlarmName: !Sub ${projectName}-handler-error
-      ComparisonOperator: GreaterThanThreshold
-      EvaluationPeriods: 1
-      Dimensions:
-        - Name: FunctionName
-          Value: !Sub ${projectName}-handler
-      Namespace: AWS/Lambda
-      MetricName: Errors      
-      Statistic: Sum
-      Period: 7200
-      #dont want any greater than 0 errors
-      Threshold: 0
+  # lambdaErrorAlarm:
+  #   Type: AWS::CloudWatch::Alarm
+  #   Properties:
+  #     #SNS topic arn to publish to if number of lambda errors is
+  #     #greater than 0
+  #     AlarmActions: 
+  #       - !Ref errorAlertTopic
+  #     AlarmDescription: !Sub ${projectName} Lambda Error alert
+  #     AlarmName: !Sub ${projectName}-handler-error
+  #     ComparisonOperator: GreaterThanThreshold
+  #     EvaluationPeriods: 1
+  #     Dimensions:
+  #       - Name: FunctionName
+  #         Value: !Sub ${projectName}-handler
+  #     Namespace: AWS/Lambda
+  #     MetricName: Errors      
+  #     Statistic: Sum
+  #     Period: 7200
+  #     #dont want any greater than 0 errors
+  #     Threshold: 0

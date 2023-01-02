@@ -116,3 +116,25 @@ Resources:
       Period: 7200
       #dont want any greater than 0 errors
       Threshold: 0
+
+
+
+  lambdaBatchTrigger: 
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: !Sub Triggers lambda function ${projectName}-handler 
+      # 23:00 pm UTC+0 every Friday
+      ScheduleExpression: cron(0 23 ? * 6 *)
+      State: ENABLED
+      Targets: 
+        - 
+          Arn: !GetAtt lambdaPythonFunction.Arn
+          Id: !Sub ${projectName}EventTrigger
+
+  permissionForEventsToInvokeLambda: 
+    Type: AWS::Lambda::Permission
+    Properties: 
+      FunctionName: !Ref lambdaPythonFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt lambdaBatchTrigger.Arn

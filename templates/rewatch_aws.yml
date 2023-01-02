@@ -89,3 +89,30 @@ Resources:
       TracingConfig: 
         Mode: Active
 
+
+
+  errorAlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${projectName}-error-topic
+
+  lambdaErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      #SNS topic arn to publish to if number of lambda errors is
+      #greater than 0
+      AlarmActions: 
+        - !Ref errorAlertTopic
+      AlarmDescription: !Sub ${projectName} Lambda Error alert
+      AlarmName: !Sub ${projectName}-handler-error
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 1
+      Dimensions:
+        - Name: FunctionName
+          Value: !Sub ${projectName}-handler
+      Namespace: AWS/Lambda
+      MetricName: Errors      
+      Statistic: Sum
+      Period: 7200
+      #dont want any greater than 0 errors
+      Threshold: 0

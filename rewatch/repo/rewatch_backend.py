@@ -23,13 +23,14 @@ def user_agent_header() -> str:
     return("Lambda:rewatch:v0.0.1 (by /u/toonamiratings)")
 
 
-def _post_body_wrapper() -> str:
+def _post_text_markup() -> str:
     """thin wrapper for the user-agent http header
     """
     return(deepcopy("""[Cyborg 009 2003 Toonami Intro](https://www.youtube.com/watch?v=MzOoG5YaXcU)
 
 ***Today's Episodes are:***
 
+{post_body}
 
 ***[LATER](https://www.youtube.com/watch?v=POqUUxA6z5U)***
 
@@ -242,8 +243,11 @@ def _reddit_post_submission(
             url=submit_request, 
             data=urlencode({
                 "kind": "self",
+                "flair_text": "Rewatch",
                 "sr": "test",
-                "text": post_to_submit.post_message,
+                "text": _post_text_markup().format(
+                        post_body=post_to_submit.post_message
+                    ),
                 "title": post_to_submit.post_title,
                 "type": "json"
             }).encode("utf-8"), 

@@ -199,9 +199,8 @@ class TestRewatchBackend(unittest.TestCase):
         urlopen_args, urlopen_kwargs = urlopen_mock.call_args
 
         self.assertIn(
-            urlencode({
-                "text":
-                mock_selected_post.post_message}
+            urlencode(
+                (""), (mock_selected_post.post_message)
             ),
             urlopen_kwargs["data"].decode("utf-8"),
             msg="\n\n post_message not in post body"

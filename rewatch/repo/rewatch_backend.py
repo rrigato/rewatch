@@ -1,4 +1,5 @@
 import base64
+from copy import deepcopy
 from http.client import HTTPResponse
 import json
 import logging
@@ -20,6 +21,28 @@ def user_agent_header() -> str:
     """thin wrapper for the user-agent http header
     """
     return("Lambda:rewatch:v0.0.1 (by /u/toonamiratings)")
+
+
+def _post_body_wrapper() -> str:
+    """thin wrapper for the user-agent http header
+    """
+    return(deepcopy("""[Cyborg 009 2003 Toonami Intro](https://www.youtube.com/watch?v=MzOoG5YaXcU)
+
+***Today's Episodes are:***
+
+
+***[LATER](https://www.youtube.com/watch?v=POqUUxA6z5U)***
+
+---
+Please make sure to mark spoilers for the show and future chapters accordingly.
+
+```ex: [Ep. 1 Spoiler](#s \"spoiler-text\")```
+
+Becomes: [Ep. 1 Spoiler](#s \"spoiler-text\")
+
+
+
+---"""))
 
 
 

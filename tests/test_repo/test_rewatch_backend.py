@@ -21,11 +21,19 @@ class TestRewatchBackend(unittest.TestCase):
 
         mock_current_date = datetime(3005, 11, 28)
         datetime_mock.utcnow.return_value = mock_current_date
-
+        mock_dynamodb_response = mock_dynamodb_query_response()
+        
+        
+        possible_post_messages = [
+            dynamodb_item["post_message"] for dynamodb_item 
+            in mock_dynamodb_response["Items"]
+            
+        ]
+        
         (   boto3_resource_mock.return_value.
             Table.return_value.query.return_value
-        ) = ( 
-            mock_dynamodb_query_response()
+        ) = deepcopy( 
+            mock_dynamodb_response
         )
 
 
@@ -33,7 +41,7 @@ class TestRewatchBackend(unittest.TestCase):
 
 
         self.assertEqual(
-            len(mock_dynamodb_query_response()["Items"]),
+            len(mock_dynamodb_response["Items"]),
             len(message_board_posts)
         )
 
@@ -47,9 +55,18 @@ class TestRewatchBackend(unittest.TestCase):
             self.assertIsInstance(message_board_post, MessageBoardPost) 
             for message_board_post in message_board_posts
         ]
+        [
+            self.assertIn(
+                message_board_post.post_message, 
+                possible_post_messages
+            ) 
+            for message_board_post in message_board_posts
+        ]
         (
             datetime_mock.utcnow.assert_called_once_with()
         )
+
+        self.assertEqual(mock_dynamodb_query_response()["Items"])
 
 
     @patch("boto3.resource")

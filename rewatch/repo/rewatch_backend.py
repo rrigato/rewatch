@@ -27,16 +27,19 @@ def _post_text_markup() -> str:
     """thin wrapper for the user-agent http header
     """
     return(deepcopy("""[Cyborg 009 2003 Toonami Intro](https://www.youtube.com/watch?v=MzOoG5YaXcU)
-
+<br>
+<br>
 ***Today's Episodes are:***
-
+<br>
 {post_body}
-
+<br>
+<br>
 ***[LATER](https://www.youtube.com/watch?v=POqUUxA6z5U)***
-
+<br>
 ---
 Please make sure to mark spoilers for the show and future chapters accordingly.
-
+<br>
+<br>
 ```ex: [Ep. 1 Spoiler](#s \"spoiler-text\")```
 
 Becomes: [Ep. 1 Spoiler](#s \"spoiler-text\")

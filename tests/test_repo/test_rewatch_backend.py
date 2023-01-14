@@ -279,3 +279,27 @@ class TestRewatchBackend(unittest.TestCase):
 
         self.assertIsInstance(submission_error, str)
 
+
+    @patch("rewatch.repo.rewatch_backend.datetime")    
+    @patch("boto3.resource")
+    def test_remove_post(self,
+        boto3_resource_mock: MagicMock,
+        datetime_mock: MagicMock
+        ):
+        """TODO - remove old rewatch post"""
+        from fixtures.rewatch_fixtures import mock_dynamodb_query_response
+        from rewatch.entities.rewatch_entity_model import MessageBoardPost
+        from rewatch.repo.rewatch_backend import load_message_board_posts
+
+        mock_current_date = datetime(3005, 11, 28)
+        datetime_mock.utcnow.return_value = mock_current_date
+
+        (   boto3_resource_mock.return_value.
+            Table.return_value.query.return_value
+        ) = ( 
+            mock_dynamodb_query_response()
+        )
+
+
+        message_board_posts = load_message_board_posts()
+

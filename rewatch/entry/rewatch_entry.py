@@ -32,7 +32,7 @@ def create_reddit_post() -> Optional[str]:
         return("No posts for today")
 
     logging.info(f"create_reddit_post - len posts_for_today" +
-    f"{posts_for_today}")
+    f"{len(posts_for_today)}")
 
     post_successful = submit_reddit_post(
         posts_for_today[0], secret_config

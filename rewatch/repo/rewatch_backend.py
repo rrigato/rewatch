@@ -5,7 +5,7 @@ import json
 import logging
 import os
 from datetime import date, datetime
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -218,6 +218,33 @@ def _retrieve_access_token(secret_config: SecretConfig) -> str:
 
 
 
+def _response_logging(api_response_body: Dict) -> None:
+    """Parses response for logging pertinent information
+    """
+    response_detail: List[Union[str, int]]
+    '''
+    reddit api cryptic config details for http 200 response
+    it will be something like 
+    [
+    14,
+    15,
+    "call",
+    [
+        "Looks like you've been doing that a lot. 
+        Take a break for 7 minutes before trying again."
+    ]
+    ]
+    '''
+    for response_detail in api_response_body["jquery"]:
+        if 14 in response_detail and 15 in response_detail:
+            logging.info(f"_reponse_logging - {response_detail[2]}")
+
+    return(None)
+
+
+
+
+
 def _reddit_post_submission(
         access_token: str,
         post_to_submit: MessageBoardPost
@@ -241,14 +268,14 @@ def _reddit_post_submission(
     )
 
     api_response : HTTPResponse
-
+    '''TODO - once we migrate to prod message board
+        add "flair_text": "Rewatch",
+    '''
     with urlopen(
             url=submit_request, 
             data=urlencode({
                 "kind": "self",
-                '''TODO - once we migrate to
-                prod message board'''
-                # "flair_text": "Rewatch",
+                
                 "sr": "test",
                 "text": _post_text_markup().format(
                         post_body=post_to_submit.post_message
@@ -259,6 +286,8 @@ def _reddit_post_submission(
             timeout=4
         ) as api_response:
         response_body = json.loads(api_response.read())
+
+        _response_logging(response_body)
 
         assert response_body["success"] == True, (
             "_reddit_post_submission - "+ 

@@ -62,8 +62,8 @@ def _populate_message_posts(dynamodb_query_response: Dict) -> List[MessageBoardP
         
         new_message_post = MessageBoardPost()
 
-        new_message_post.post_message = dynamodb_item["post_title"]
-        new_message_post.post_title = dynamodb_item["post_message"]
+        new_message_post.post_message = dynamodb_item["post_message"]
+        new_message_post.post_title = dynamodb_item["post_title"]
 
         message_board_posts.append(new_message_post)
 
@@ -246,7 +246,9 @@ def _reddit_post_submission(
             url=submit_request, 
             data=urlencode({
                 "kind": "self",
-                "flair_text": "Rewatch",
+                '''TODO - once we migrate to
+                prod message board'''
+                # "flair_text": "Rewatch",
                 "sr": "test",
                 "text": _post_text_markup().format(
                         post_body=post_to_submit.post_message

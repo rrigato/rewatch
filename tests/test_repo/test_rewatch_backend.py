@@ -66,7 +66,10 @@ class TestRewatchBackend(unittest.TestCase):
             datetime_mock.utcnow.assert_called_once_with()
         )
 
-        self.assertEqual(mock_dynamodb_query_response()["Items"])
+        self.assertEqual(
+            len(mock_dynamodb_response["Items"]), 
+            len(message_board_posts)
+        )
 
 
     @patch("boto3.resource")
@@ -229,6 +232,9 @@ class TestRewatchBackend(unittest.TestCase):
             urlopen_kwargs["data"].decode("utf-8"),
             msg="\n\n post_title not in post body"
         )
+        '''TODO - once we migrate to
+        prod message board'''
+        '''
         self.assertIn(
             urlencode({
                 "flair_text": "Rewatch"
@@ -236,9 +242,7 @@ class TestRewatchBackend(unittest.TestCase):
             urlopen_kwargs["data"].decode("utf-8"),
             msg="\n\n flair_text not in post body"
         )
-        '''TODO - once we migrate to
-        prod message board'''
-        '''self.assertIn(
+        self.assertIn(
             urlencode({
                 "sr": "toonami"
             }),

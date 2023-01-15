@@ -1,10 +1,10 @@
 import base64
-from copy import deepcopy
-from http.client import HTTPResponse
 import json
 import logging
 import os
+from copy import deepcopy
 from datetime import date, datetime
+from http.client import HTTPResponse
 from typing import Dict, List, Optional, Tuple, Union
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -14,7 +14,7 @@ from boto3.dynamodb.conditions import Key
 
 from rewatch.entities.rewatch_entity_model import (MessageBoardPost,
                                                    SecretConfig)
-
+from rewatch.repo.rewatch_statics import post_body_markup
 
 
 def user_agent_header() -> str:
@@ -26,27 +26,7 @@ def user_agent_header() -> str:
 def _post_text_markup() -> str:
     """thin wrapper for the user-agent http header
     """
-    return(deepcopy("""[Cyborg 009 2003 Toonami Intro](https://www.youtube.com/watch?v=MzOoG5YaXcU)
-<br>
-<br>
-***Today's Episodes are:***
-<br>
-{post_body}
-<br>
-<br>
-***[LATER](https://www.youtube.com/watch?v=POqUUxA6z5U)***
-<br>
----
-Please make sure to mark spoilers for the show and future chapters accordingly.
-<br>
-<br>
-```ex: [Ep. 1 Spoiler](#s \"spoiler-text\")```
-
-Becomes: [Ep. 1 Spoiler](#s \"spoiler-text\")
-
-
-
----"""))
+    return(deepcopy(post_body_markup))
 
 
 
@@ -218,28 +198,24 @@ def _retrieve_access_token(secret_config: SecretConfig) -> str:
 
 
 
-def _response_logging(api_response_body: Dict) -> None:
+def _response_validation(api_response_body: Dict) -> None:
     """Parses response for logging pertinent information
+    raises AssertionError if response body does not pass validation
     """
-    response_detail: List[Union[str, int]]
-    '''
-    reddit api cryptic config details for http 200 response
-    it will be something like 
-    [
-    14,
-    15,
-    "call",
-    [
-        "Looks like you've been doing that a lot. 
-        Take a break for 7 minutes before trying again."
-    ]
-    ]
-    '''
-    for response_detail in api_response_body["jquery"]:
-        if 14 in response_detail and 15 in response_detail:
-            logging.info(f"_reponse_logging - {response_detail[2]}")
 
-    return(None)
+    '''api_response_body structure
+    {
+        "jquery":[["list"], ["of", "list", "api feedback"]],
+        "success": <boolean>
+
+    }'''
+
+    if api_response_body["success"] != True:
+        logging.info(f"_response_validation - raising errror")
+        logging.error(api_response_body)
+    
+        raise AssertionError("_response_validation false")
+
 
 
 
@@ -287,16 +263,10 @@ def _reddit_post_submission(
         ) as api_response:
         response_body = json.loads(api_response.read())
 
-        _response_logging(response_body)
-
-        assert response_body["success"] == True, (
-            "_reddit_post_submission - "+ 
-            "api_response.getcode - " + str(api_response.getcode())
-        )
-    
-    
+        _response_validation(response_body)
 
         logging.info(f"_reddit_post_submission - invocation end")
+        
         return(None)
 
 

@@ -188,8 +188,9 @@ class TestRewatchBackend(unittest.TestCase):
                     }
                 ).encode("utf-8")
                 ,
-                json.dumps(
+                json.dumps( 
                     {
+                        "jquery": [[14, 15, ["Link to post"]]],
                         "success": True
                     }
                 ).encode("utf-8")

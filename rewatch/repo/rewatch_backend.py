@@ -306,6 +306,12 @@ def remove_post(message_board_post: MessageBoardPost
 
     logging.info("load_message_board_posts - obtained table resource")    
     
+    dynamodb_table.delete_item(
+        Key=Key("PK").eq(
+            "rewatch#" +
+            message_board_post.post_date.isoformat()
+        )        
+    )
     logging.info(f"remove_post - invocation end")
     return(None)
 

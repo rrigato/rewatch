@@ -323,7 +323,7 @@ class TestRewatchBackend(unittest.TestCase):
 
 
         message_board_posts = remove_post(
-            mock_message_board_posts(1)
+            mock_message_board_posts(1)[0]
         )
 
 

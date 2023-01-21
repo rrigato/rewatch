@@ -309,19 +309,23 @@ class TestRewatchBackend(unittest.TestCase):
         datetime_mock: MagicMock
         ):
         """TODO - remove old rewatch post"""
-        from fixtures.rewatch_fixtures import mock_dynamodb_query_response
+        from fixtures.rewatch_fixtures import mock_message_board_posts
         from rewatch.entities.rewatch_entity_model import MessageBoardPost
-        from rewatch.repo.rewatch_backend import load_message_board_posts
+        from rewatch.repo.rewatch_backend import remove_post
 
         mock_current_date = datetime(3005, 11, 28)
         datetime_mock.utcnow.return_value = mock_current_date
+        mock_delete_item = MagicMock()
 
         (   boto3_resource_mock.return_value.
-            Table.return_value.query.return_value
-        ) = ( 
-            mock_dynamodb_query_response()
+            Table.return_value.delete_item
+        ) = mock_delete_item
+
+
+        message_board_posts = remove_post(
+            mock_message_board_posts(1)
         )
 
 
-        message_board_posts = load_message_board_posts()
 
+        mock_delete_item.assert_called_once()

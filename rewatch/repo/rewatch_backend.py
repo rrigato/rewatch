@@ -290,6 +290,28 @@ def submit_reddit_post(post_to_submit: MessageBoardPost,
         return("Unexpected submitting post")
 
 
+
+
+def remove_post(message_board_post: MessageBoardPost
+    ) -> Optional[str]:
+    """Cleans up persistant storage by removing the 
+    corresponding message_board_post
+    """
+    dynamodb_table = boto3.resource(
+        "dynamodb", 
+        os.environ.get("AWS_REGION")
+    ).Table(
+        "rewatch_shared_table"
+    )
+
+    logging.info("load_message_board_posts - obtained table resource")    
+    
+    logging.info(f"remove_post - invocation end")
+    return(None)
+
+
+
+
 if __name__ == "__main__":
     import logging
     import os

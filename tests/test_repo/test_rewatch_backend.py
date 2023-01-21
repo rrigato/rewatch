@@ -302,19 +302,37 @@ class TestRewatchBackend(unittest.TestCase):
         self.assertIsInstance(submission_error, str)
 
 
-    @patch("rewatch.repo.rewatch_backend.datetime")    
     @patch("boto3.resource")
     def test_remove_post(self,
-        boto3_resource_mock: MagicMock,
-        datetime_mock: MagicMock
+        boto3_resource_mock: MagicMock
         ):
-        """TODO - remove old rewatch post"""
+        """Happy Path no errors"""
+        from fixtures.rewatch_fixtures import mock_message_board_posts
+        from rewatch.repo.rewatch_backend import remove_post
+
+        mock_delete_item = MagicMock()
+
+        (   boto3_resource_mock.return_value.
+            Table.return_value.delete_item
+        ) = mock_delete_item
+
+
+        message_board_posts = remove_post(
+            mock_message_board_posts(1)[0]
+        )
+        
+        mock_delete_item.assert_called_once()
+
+
+    @patch("boto3.resource")
+    def test_remove_post_unexpected_error(self,
+        boto3_resource_mock: MagicMock
+        ):
+        """Unhappy path unexpected error suppressed"""
         from fixtures.rewatch_fixtures import mock_message_board_posts
         from rewatch.entities.rewatch_entity_model import MessageBoardPost
         from rewatch.repo.rewatch_backend import remove_post
 
-        mock_current_date = datetime(3005, 11, 28)
-        datetime_mock.utcnow.return_value = mock_current_date
         mock_delete_item = MagicMock()
 
         (   boto3_resource_mock.return_value.
@@ -328,4 +346,4 @@ class TestRewatchBackend(unittest.TestCase):
 
 
 
-        mock_delete_item.assert_called_once()
+        

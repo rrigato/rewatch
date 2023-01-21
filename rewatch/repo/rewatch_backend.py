@@ -307,10 +307,11 @@ def remove_post(message_board_post: MessageBoardPost
     logging.info("load_message_board_posts - obtained table resource")    
     
     dynamodb_table.delete_item(
-        Key=Key("PK").eq(
-            "rewatch#" +
+        Key={"PK":
+            ("rewatch#" +
             message_board_post.post_date.isoformat()
-        )        
+        )    
+        }    
     )
     logging.info(f"remove_post - invocation end")
     return(None)
@@ -328,9 +329,11 @@ if __name__ == "__main__":
         format="%(levelname)s | %(asctime)s.%(msecs)03d" + strftime("%z") + " | %(message)s",
         datefmt="%Y-%m-%dT%H:%M:%S", level=logging.INFO
     )
-    loaded_secrets = load_secret_config()
-    repo_response = submit_reddit_post(
-        mock_message_board_posts(1)[0], loaded_secrets)
+    message_post_to_delete = mock_message_board_posts(1)[0]
+    message_post_to_delete.post_date = date(2023, 1, 14)
+    repo_response = remove_post(
+        message_post_to_delete
+    )
 
     print(repo_response)
 

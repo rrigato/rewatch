@@ -320,8 +320,22 @@ class TestRewatchBackend(unittest.TestCase):
         remove_posts_response = remove_post(
             mock_message_board_posts(1)[0]
         )
-        
-        mock_delete_item.assert_called_once()
+
+
+        args, kwargs = mock_delete_item.call_args
+
+
+        self.assertIn(
+            "PK",
+            kwargs["Key"].keys(),
+            msg="\n\nOutgoing delete_item call has no PK"
+        )
+
+        self.assertIn(
+            "SK",
+            kwargs["Key"].keys(),
+            msg="\n\nOutgoing delete_item call has no SK"
+        )
         self.assertIsNone(remove_posts_response)
 
 
@@ -332,7 +346,6 @@ class TestRewatchBackend(unittest.TestCase):
         """Unhappy path unexpected error suppressed"""
         from fixtures.rewatch_fixtures import mock_message_board_posts
         from rewatch.repo.rewatch_backend import remove_post
-
         
         (   boto3_resource_mock.return_value.
             Table.return_value.delete_item.side_effect

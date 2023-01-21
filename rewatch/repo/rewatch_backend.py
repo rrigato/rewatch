@@ -297,24 +297,29 @@ def remove_post(message_board_post: MessageBoardPost
     """Cleans up persistant storage by removing the 
     corresponding message_board_post
     """
-    dynamodb_table = boto3.resource(
-        "dynamodb", 
-        os.environ.get("AWS_REGION")
-    ).Table(
-        "rewatch_shared_table"
-    )
+    try:
+        dynamodb_table = boto3.resource(
+            "dynamodb", 
+            os.environ.get("AWS_REGION")
+        ).Table(
+            "rewatch_shared_table"
+        )
 
-    logging.info("load_message_board_posts - obtained table resource")    
-    
-    dynamodb_table.delete_item(
-        Key={"PK":
-            ("rewatch#" +
-            message_board_post.post_date.isoformat()
-        )    
-        }    
-    )
-    logging.info(f"remove_post - invocation end")
-    return(None)
+        logging.info("load_message_board_posts - obtained table resource")    
+        
+        dynamodb_table.delete_item(
+            Key={"PK":
+                ("rewatch#" +
+                message_board_post.post_date.isoformat()
+            )    
+            }    
+        )
+        logging.info(f"remove_post - invocation end")
+        return(None)
+
+    except Exception as error_suppression:
+        logging.exception("remove_post - unexpected error")
+        return("Unexpected error cleaning up persistant storage")
 
 
 

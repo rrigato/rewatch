@@ -317,11 +317,12 @@ class TestRewatchBackend(unittest.TestCase):
         ) = mock_delete_item
 
 
-        message_board_posts = remove_post(
+        remove_posts_response = remove_post(
             mock_message_board_posts(1)[0]
         )
         
         mock_delete_item.assert_called_once()
+        self.assertIsNone(remove_posts_response)
 
 
     @patch("boto3.resource")
@@ -330,20 +331,20 @@ class TestRewatchBackend(unittest.TestCase):
         ):
         """Unhappy path unexpected error suppressed"""
         from fixtures.rewatch_fixtures import mock_message_board_posts
-        from rewatch.entities.rewatch_entity_model import MessageBoardPost
         from rewatch.repo.rewatch_backend import remove_post
 
-        mock_delete_item = MagicMock()
-
+        
         (   boto3_resource_mock.return_value.
-            Table.return_value.delete_item
-        ) = mock_delete_item
+            Table.return_value.delete_item.side_effect
+        ) = RuntimeError(
+            "The provided element does not match the key schema")
 
 
-        message_board_posts = remove_post(
+        remove_posts_response = remove_post(
             mock_message_board_posts(1)[0]
         )
 
 
+        self.assertIsInstance(remove_posts_response, str)
 
         

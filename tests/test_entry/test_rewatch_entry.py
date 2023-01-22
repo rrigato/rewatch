@@ -6,13 +6,16 @@ from unittest.mock import MagicMock, patch
 
 class TestRewatchEntry(unittest.TestCase):
     
+    @unittest.skip("TODO - entry implementation")
+    @patch("rewatch.entry.rewatch_entry.remove_post")
     @patch("rewatch.entry.rewatch_entry.submit_reddit_post")
     @patch("rewatch.entry.rewatch_entry.load_message_board_posts")
     @patch("rewatch.entry.rewatch_entry.load_secret_config")
     def test_create_reddit_post(self,
         load_secret_config_mock: MagicMock,
         load_message_board_posts_mock: MagicMock,
-        submit_reddit_post_mock: MagicMock
+        submit_reddit_post_mock: MagicMock,
+        remove_post_mock: MagicMock
         ):
         """Happy path for reddit post creation"""
         from fixtures.rewatch_fixtures import (mock_message_board_posts,

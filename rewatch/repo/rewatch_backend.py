@@ -31,7 +31,8 @@ def _post_text_markup() -> str:
 
 
 
-def _populate_message_posts(dynamodb_query_response: Dict) -> List[MessageBoardPost]:
+def _populate_message_posts(dynamodb_query_response: Dict
+    ) -> List[MessageBoardPost]:
     """populates entity from external persisted storage
     """
     logging.info(f"_populate_message_posts - invocation begin")
@@ -44,6 +45,7 @@ def _populate_message_posts(dynamodb_query_response: Dict) -> List[MessageBoardP
 
         new_message_post.post_message = dynamodb_item["post_message"]
         new_message_post.post_title = dynamodb_item["post_title"]
+        new_message_post.show_name = dynamodb_item["SK"]
 
         message_board_posts.append(new_message_post)
 

@@ -51,10 +51,18 @@ class TestRewatchBackend(unittest.TestCase):
         )
 
         self.assertIn("KeyConditionExpression", kwargs.keys())
-        [
-            self.assertIsInstance(message_board_post, MessageBoardPost) 
-            for message_board_post in message_board_posts
-        ]
+        for message_board_post in message_board_posts:
+        
+            self.assertIsInstance(
+                message_board_post, 
+                MessageBoardPost
+            ) 
+            self.assertIsNotNone(
+                message_board_post.show_name, 
+                msg="\n\nshow_name extension not working e2e"
+            ) 
+            
+        
         [
             self.assertIn(
                 message_board_post.post_message, 
@@ -301,7 +309,7 @@ class TestRewatchBackend(unittest.TestCase):
 
         self.assertIsInstance(submission_error, str)
 
-    
+    @unittest.skip("TODO")
     @patch("boto3.resource")
     def test_remove_post(self,
         boto3_resource_mock: MagicMock

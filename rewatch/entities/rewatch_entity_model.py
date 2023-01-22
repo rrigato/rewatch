@@ -10,6 +10,7 @@ class MessageBoardPost():
         self.post_date = None
         self.post_message = None
         self.post_title = None
+        self.show_name = None
 
     @property
     def post_date(self) -> Optional[date]:
@@ -50,6 +51,20 @@ class MessageBoardPost():
                 "must be a str or None"
             )
         self._post_title = post_title
+
+    @property
+    def show_name(self) -> Optional[str]:
+        return(self._show_name)
+
+    @show_name.setter
+    def show_name(self, show_name: Optional[str]):
+        if type(show_name) not in (
+            str, type(None)):
+            raise TypeError(
+                "MessageBoardPost - show_name datatype " +
+                "must be a str or None"
+            )
+        self._show_name = show_name
 
 
 class SecretConfig():

@@ -70,22 +70,22 @@ def mock_dynamodb_query_response(
     return(deepcopy(
         {"Items":[
             {
-                "PK": "rewatch#showname",
-                "SK": "3005-11-09",
+                "PK": "rewatch#3005-11-09",
+                "SK": "showname",
                 "post_title": "Episode 1 and 2",
                 "post_message": "Markdown for Episode 1 and 2"
 
             },
             {
-                "PK": "rewatch#showname",
-                "SK": "3005-11-16",
+                "PK": "rewatch#3005-11-16",
+                "SK": "showname",
                 "post_title": "Episode 3 and 4",
                 "post_message": "Markdown for Episode 3 and 4"
 
             },
             {
-                "PK": "rewatch#showname",
-                "SK": "3005-11-23",
+                "PK": "rewatch#3005-11-23",
+                "SK": "showname",
                 "post_title": "Episode 5 and 6",
                 "post_message": "Markdown for Episode 5 and 6"
 

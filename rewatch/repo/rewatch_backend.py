@@ -308,10 +308,13 @@ def remove_post(message_board_post: MessageBoardPost
         logging.info("load_message_board_posts - obtained table resource")    
         
         dynamodb_table.delete_item(
-            Key={"PK":
-                ("rewatch#" +
-                message_board_post.post_date.isoformat()
-            )    
+            Key={
+                "PK":
+                    ("rewatch#" +
+                    message_board_post.post_date.isoformat()
+                )
+                # "SK": message_board_post.
+
             }    
         )
         logging.info(f"remove_post - invocation end")

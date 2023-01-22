@@ -311,12 +311,11 @@ def remove_post(message_board_post: MessageBoardPost
         
         dynamodb_table.delete_item(
             Key={
-                "PK":
-                    ("rewatch#" +
+                "PK":(
+                    "rewatch#" +
                     message_board_post.post_date.isoformat()
-                )
-                # "SK": message_board_post.
-
+                ),
+                "SK": message_board_post.show_name
             }    
         )
         logging.info(f"remove_post - invocation end")
@@ -341,6 +340,7 @@ if __name__ == "__main__":
     )
     message_post_to_delete = mock_message_board_posts(1)[0]
     message_post_to_delete.post_date = date(2023, 1, 14)
+    message_post_to_delete.show_name = "cyborg009"
     repo_response = remove_post(
         message_post_to_delete
     )

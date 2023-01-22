@@ -7,7 +7,7 @@
             "python": "${workspaceFolder}/avenv/bin/python",
             "type": "python",
             "request": "launch",
-            "module": "handlers.rewatch_handler"
+            "module": "rewatch.repo.rewatch_backend"
             // "module": "unittest"
         }
     ]

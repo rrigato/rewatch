@@ -4,7 +4,8 @@ import logging
 from typing import Optional
 
 from rewatch.repo.rewatch_backend import (load_message_board_posts,
-                                          load_secret_config, submit_reddit_post)
+                                          load_secret_config, remove_post,
+                                          submit_reddit_post)
 
 
 def create_reddit_post() -> Optional[str]:
@@ -34,13 +35,20 @@ def create_reddit_post() -> Optional[str]:
     logging.info(f"create_reddit_post - len posts_for_today" +
     f"{len(posts_for_today)}")
 
-    post_successful = submit_reddit_post(
+    message_board_creation_error = submit_reddit_post(
         posts_for_today[0], secret_config
     )
 
-    if post_successful is not None:
+    if message_board_creation_error is not None:
         logging.info(f"create_reddit_post - short circuit post creation")
         return("Error creating reddit post")
+
+    backend_cleanup_error = remove_post(posts_for_today[0])
+    
+    if backend_cleanup_error is not None:
+        logging.info(
+            f"create_reddit_post - short circuit bakcend cleanup")
+        return("Error cleaning up post creation")
 
     logging.info(f"create_reddit_post - happy path")
 
@@ -49,9 +57,9 @@ def create_reddit_post() -> Optional[str]:
 
 
 if __name__ == "__main__":
-    from time import strftime
     import logging
     import os
+    from time import strftime
     os.environ["AWS_REGION"] = "us-east-1"
     logging.basicConfig(
         format="%(levelname)s | %(asctime)s.%(msecs)03d" + strftime("%z") + " | %(message)s",

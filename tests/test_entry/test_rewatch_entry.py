@@ -1,12 +1,10 @@
-import json
 import unittest
-from copy import deepcopy
 from unittest.mock import MagicMock, patch
 
 
 class TestRewatchEntry(unittest.TestCase):
     
-    @unittest.skip("TODO - entry implementation")
+    
     @patch("rewatch.entry.rewatch_entry.remove_post")
     @patch("rewatch.entry.rewatch_entry.submit_reddit_post")
     @patch("rewatch.entry.rewatch_entry.load_message_board_posts")
@@ -28,6 +26,7 @@ class TestRewatchEntry(unittest.TestCase):
             mock_message_board_posts(1)
         )
         submit_reddit_post_mock.return_value = None
+        remove_post_mock.return_value = None
 
         post_creation_error = create_reddit_post()
 
@@ -35,4 +34,5 @@ class TestRewatchEntry(unittest.TestCase):
         self.assertIsNone(post_creation_error)
         
         submit_reddit_post_mock.assert_called_once()
+        remove_post_mock.assert_called_once()
 

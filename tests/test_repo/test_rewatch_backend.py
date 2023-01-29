@@ -102,12 +102,47 @@ class TestRewatchBackend(unittest.TestCase):
         self.assertIsNone(message_board_posts)
 
 
+    @patch("rewatch.repo.rewatch_backend.datetime")    
+    @patch("boto3.resource")
+    def test_load_message_board_posts_e2e_bugs(self,
+        boto3_resource_mock: MagicMock,
+        datetime_mock: MagicMock
+        ):
+        """post_date field is not populated"""
+        from fixtures.rewatch_fixtures import mock_dynamodb_query_response
+        from rewatch.entities.rewatch_entity_model import MessageBoardPost
+        from rewatch.repo.rewatch_backend import load_message_board_posts
+
+        mock_current_date = datetime(3005, 11, 28)
+        datetime_mock.utcnow.return_value = mock_current_date
+        mock_dynamodb_response = mock_dynamodb_query_response()
+        
+        
+        possible_post_messages = [
+            dynamodb_item["post_message"] for dynamodb_item 
+            in mock_dynamodb_response["Items"]
+            
+        ]
+        
+        (   boto3_resource_mock.return_value.
+            Table.return_value.query.return_value
+        ) = deepcopy( 
+            mock_dynamodb_response
+        )
+
+
+        message_board_posts = load_message_board_posts()
+
+
+        for message_board_post in message_board_posts:
+            self.assertIsNotNone(
+                message_board_post.post_date
+            )
 
     @patch("boto3.client")
     def test_load_secret_config(self, 
         boto_client_mock: MagicMock):
         """Environment config successfully loaded"""
-        from fixtures.rewatch_fixtures import mock_secret_config
         from rewatch.entities.rewatch_entity_model import SecretConfig
         from rewatch.repo.rewatch_backend import load_secret_config
 

@@ -5,7 +5,7 @@ import os
 from copy import deepcopy
 from datetime import date, datetime
 from http.client import HTTPResponse
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -31,7 +31,8 @@ def _post_text_markup() -> str:
 
 
 
-def _populate_message_posts(dynamodb_query_response: Dict
+def _populate_message_posts(dynamodb_query_response: Dict,
+    post_date: date
     ) -> List[MessageBoardPost]:
     """populates entity from external persisted storage
     """
@@ -43,6 +44,7 @@ def _populate_message_posts(dynamodb_query_response: Dict
         
         new_message_post = MessageBoardPost()
 
+        new_message_post.post_date = post_date
         new_message_post.post_message = dynamodb_item["post_message"]
         new_message_post.post_title = dynamodb_item["post_title"]
         new_message_post.show_name = dynamodb_item["SK"]
@@ -74,15 +76,17 @@ def load_message_board_posts() -> Optional[
 
         logging.info("load_message_board_posts - obtained table resource")
 
-
+        current_utc_date = datetime.utcnow().date()
+        
         dynamodb_response = dynamodb_table.query(
             KeyConditionExpression=Key("PK").eq(
                 "rewatch#" +
-                datetime.utcnow().strftime("%Y-%m-%d")
+                current_utc_date.strftime("%Y-%m-%d")
             )
         )
 
-        logging.info("load_message_board_posts - obtained dynamodb_response")
+        logging.info(f"load_message_board_posts - obtained "
+        + f"dynamodb_response for {current_utc_date}")
 
         if len(dynamodb_response["Items"]) == 0:
             logging.info(
@@ -90,7 +94,9 @@ def load_message_board_posts() -> Optional[
             )
             return([])
     
-        return(_populate_message_posts(dynamodb_response))
+        return(_populate_message_posts(
+            dynamodb_response, current_utc_date
+        ))
 
     except Exception as error_suppression:
         logging.exception("load_message_board_posts - unexpected error")

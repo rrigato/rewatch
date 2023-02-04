@@ -6,7 +6,7 @@ from typing import Dict
 
 from rewatch.entry.rewatch_entry import create_reddit_post
 
-
+logging.getLogger().setLevel(logging.INFO)
 
 def rewatch_external(lambda_event: Dict, lambda_context) -> None:
     """Lambda handler for application

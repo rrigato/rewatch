@@ -276,9 +276,7 @@ class TestRewatchBackend(unittest.TestCase):
             urlopen_kwargs["data"].decode("utf-8"),
             msg="\n\n post_title not in post body"
         )
-        '''TODO - once we migrate to
-        prod message board'''
-        '''
+        
         self.assertIn(
             urlencode({
                 "flair_text": "Rewatch"
@@ -292,7 +290,7 @@ class TestRewatchBackend(unittest.TestCase):
             }),
             urlopen_kwargs["data"].decode("utf-8"),
             msg="\n\n incorrect subreddit in post body"
-        )'''
+        )
         self.assertEqual(read_mock.call_count, 2)
 
 

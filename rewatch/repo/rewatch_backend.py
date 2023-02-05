@@ -252,15 +252,14 @@ def _reddit_post_submission(
     )
 
     api_response : HTTPResponse
-    '''TODO - once we migrate to prod message board
-        add "flair_text": "Rewatch",
-    '''
+    
     with urlopen(
             url=submit_request, 
             data=urlencode({
+                "flair_text": "Rewatch",
                 "kind": "self",
                 
-                "sr": "test",
+                "sr": "toonami",
                 "text": _post_text_markup().format(
                         post_body=post_to_submit.post_message
                     ),

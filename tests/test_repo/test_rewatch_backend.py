@@ -284,7 +284,7 @@ class TestRewatchBackend(unittest.TestCase):
         mock_dev_post = mock_message_board_posts(1)[0]
         mock_prod_post = mock_message_board_posts(1)[0]
         mock_dev_post.subreddit = "test"
-        mock_prod_post.subreddit = "toonami"
+        mock_prod_post.subreddit = "Toonami"
         
 
         dev_post_body = reddit_post_body(

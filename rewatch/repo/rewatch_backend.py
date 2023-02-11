@@ -20,7 +20,7 @@ from rewatch.repo.rewatch_statics import post_body_markup
 def user_agent_header() -> str:
     """thin wrapper for the user-agent http header
     """
-    return("Lambda:rewatch:v0.0.1 (by /u/toonamiratings)")
+    return("Lambda:rewatch:v0.7.0 (by /u/toonamiratings)")
 
 
 def _post_text_markup() -> str:
@@ -244,11 +244,11 @@ def reddit_post_body(post_to_submit: MessageBoardPost) -> bytes:
         "type": "json"
     }
 
-    if post_to_submit.subreddit == "toonami":
+    if post_to_submit.subreddit == "Toonami":
         post_body["flair_text"] = "Rewatch"
 
     logging.info(f"post_submission_post_body - post_body")
-    
+
     logging.info(post_body)
 
     return(

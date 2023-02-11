@@ -56,12 +56,7 @@ class TestRewatchBackend(unittest.TestCase):
             self.assertIsInstance(
                 message_board_post, 
                 MessageBoardPost
-            ) 
-            self.assertIsNotNone(
-                message_board_post.show_name, 
-                msg="\n\nshow_name extension not working e2e"
-            ) 
-            
+            )             
         
         [
             self.assertIn(
@@ -78,6 +73,44 @@ class TestRewatchBackend(unittest.TestCase):
             len(mock_dynamodb_response["Items"]), 
             len(message_board_posts)
         )
+
+
+    @patch("rewatch.repo.rewatch_backend.datetime")    
+    @patch("boto3.resource")
+    def test_load_message_board_posts_new_attributes(self,
+        boto3_resource_mock: MagicMock,
+        datetime_mock: MagicMock
+        ):
+        """All properties added to MessageBoardPosts entity"""
+        from fixtures.rewatch_fixtures import mock_dynamodb_query_response
+        from rewatch.repo.rewatch_backend import load_message_board_posts
+
+        mock_current_date = datetime(3005, 11, 28)
+        datetime_mock.utcnow.return_value = mock_current_date
+        mock_dynamodb_response = mock_dynamodb_query_response()
+        
+        (   boto3_resource_mock.return_value.
+            Table.return_value.query.return_value
+        ) = deepcopy( 
+            mock_dynamodb_response
+        )
+
+
+        message_board_posts = load_message_board_posts()
+
+
+
+        for message_board_post in message_board_posts:
+        
+            self.assertIsNotNone(
+                message_board_post.show_name, 
+                msg="\n\nshow_name extension not working e2e"
+            ) 
+            self.assertIsNotNone(
+                message_board_post.subreddit, 
+                msg="\n\nsubreddit extension not working e2e"
+            ) 
+                    
 
 
     @patch("boto3.resource")

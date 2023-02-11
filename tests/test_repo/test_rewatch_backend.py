@@ -1,9 +1,9 @@
-from datetime import datetime
 import json
 import unittest
 from copy import deepcopy
+from datetime import datetime
 from unittest.mock import MagicMock, patch
-
+from urllib.parse import urlencode
 
 
 class TestRewatchBackend(unittest.TestCase):
@@ -240,17 +240,53 @@ class TestRewatchBackend(unittest.TestCase):
             msg="\n\ne2e bug where password not populated correctly"
         )
 
+    def test_reddit_post_body(self):
+        """post_body is properly formed"""
+        from fixtures.rewatch_fixtures import mock_message_board_posts
+        from rewatch.repo.rewatch_backend import reddit_post_body
 
+        mock_selected_post = mock_message_board_posts(1)[0]
+
+        reddit_api_post_body = reddit_post_body(
+            mock_selected_post
+        )
+        self.assertIn(
+            urlencode(
+                (""), (mock_selected_post.post_message)
+            ),
+            reddit_api_post_body.decode("utf-8"),
+            msg="\n\n post_message not in post body"
+        )
+        self.assertIn(
+            urlencode({
+                "title": mock_selected_post.post_title
+            }),
+            reddit_api_post_body.decode("utf-8"),
+            msg="\n\n post_title not in post body"
+        )
+        
+        self.assertIn(
+            urlencode({
+                "flair_text": "Rewatch"
+            }),
+            reddit_api_post_body.decode("utf-8"),
+            msg="\n\n flair_text not in post body"
+        )
+        self.assertIn(
+            urlencode({
+                "sr": "toonami"
+            }),
+            reddit_api_post_body.decode("utf-8"),
+            msg="\n\n incorrect subreddit in post body"
+        )
 
     @patch("rewatch.repo.rewatch_backend.urlopen")
     def test_submit_reddit_post(self, 
         urlopen_mock: MagicMock):
         """Environment config successfully loaded"""
-        from fixtures.rewatch_fixtures import mock_message_board_posts
-        from fixtures.rewatch_fixtures import mock_secret_config
-        from rewatch.entities.rewatch_entity_model import SecretConfig
+        from fixtures.rewatch_fixtures import (mock_message_board_posts,
+                                               mock_secret_config)
         from rewatch.repo.rewatch_backend import submit_reddit_post
-        from urllib.parse import urlencode
 
         mock_selected_post = mock_message_board_posts(1)[0]
         mockToken = "mock0"
@@ -331,8 +367,8 @@ class TestRewatchBackend(unittest.TestCase):
     def test_submit_reddit_post_unhappy_path(self, 
         urlopen_mock: MagicMock):
         """Success is False on second api call"""
-        from fixtures.rewatch_fixtures import mock_message_board_posts
-        from fixtures.rewatch_fixtures import mock_secret_config
+        from fixtures.rewatch_fixtures import (mock_message_board_posts,
+                                               mock_secret_config)
         from rewatch.entities.rewatch_entity_model import SecretConfig
         from rewatch.repo.rewatch_backend import submit_reddit_post
 

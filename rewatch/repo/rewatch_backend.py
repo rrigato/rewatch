@@ -48,6 +48,7 @@ def _populate_message_posts(dynamodb_query_response: Dict,
         new_message_post.post_message = dynamodb_item["post_message"]
         new_message_post.post_title = dynamodb_item["post_title"]
         new_message_post.show_name = dynamodb_item["SK"]
+        new_message_post.subreddit = dynamodb_item["subreddit"]
 
         message_board_posts.append(new_message_post)
 
@@ -228,6 +229,32 @@ def _response_validation(api_response_body: Dict) -> None:
 
 
 
+def reddit_post_body(post_to_submit: MessageBoardPost) -> bytes:
+    """Applies logic necessary to create api post body
+    encoded as bytes
+    """
+    post_body = {
+        "flair_text": "Rewatch",
+        "kind": "self",
+        
+        "sr": "toonami",
+        "text": _post_text_markup().format(
+                post_body=post_to_submit.post_message
+            ),
+        "title": post_to_submit.post_title,
+        "type": "json"
+    }
+    logging.info(f"post_submission_post_body - post_body")
+    logging.info(post_body)
+
+    return(
+        urlencode(
+            post_body
+            ).encode("utf-8")
+    )
+
+
+
 
 def _reddit_post_submission(
         access_token: str,
@@ -255,17 +282,7 @@ def _reddit_post_submission(
     
     with urlopen(
             url=submit_request, 
-            data=urlencode({
-                "flair_text": "Rewatch",
-                "kind": "self",
-                
-                "sr": "toonami",
-                "text": _post_text_markup().format(
-                        post_body=post_to_submit.post_message
-                    ),
-                "title": post_to_submit.post_title,
-                "type": "json"
-            }).encode("utf-8"), 
+            data=reddit_post_body(post_to_submit), 
             timeout=4
         ) as api_response:
         response_body = json.loads(api_response.read())

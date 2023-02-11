@@ -234,17 +234,21 @@ def reddit_post_body(post_to_submit: MessageBoardPost) -> bytes:
     encoded as bytes
     """
     post_body = {
-        "flair_text": "Rewatch",
         "kind": "self",
         
-        "sr": "toonami",
+        "sr": post_to_submit.subreddit,
         "text": _post_text_markup().format(
                 post_body=post_to_submit.post_message
             ),
         "title": post_to_submit.post_title,
         "type": "json"
     }
+
+    if post_to_submit.subreddit == "toonami":
+        post_body["flair_text"] = "Rewatch"
+
     logging.info(f"post_submission_post_body - post_body")
+    
     logging.info(post_body)
 
     return(

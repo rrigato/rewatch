@@ -269,14 +269,7 @@ class TestRewatchBackend(unittest.TestCase):
         
         self.assertIn(
             urlencode({
-                "flair_text": "Rewatch"
-            }),
-            reddit_api_post_body.decode("utf-8"),
-            msg="\n\n flair_text not in post body"
-        )
-        self.assertIn(
-            urlencode({
-                "sr": "toonami"
+                "sr": mock_post.subreddit
             }),
             reddit_api_post_body.decode("utf-8"),
             msg="\n\n incorrect subreddit in post body"
@@ -287,7 +280,6 @@ class TestRewatchBackend(unittest.TestCase):
         """dev/test flags by subreddit"""
         from fixtures.rewatch_fixtures import mock_message_board_posts
         from rewatch.repo.rewatch_backend import reddit_post_body
-
 
         mock_dev_post = mock_message_board_posts(1)[0]
         mock_prod_post = mock_message_board_posts(1)[0]
@@ -307,11 +299,15 @@ class TestRewatchBackend(unittest.TestCase):
             urlencode({
                 "flair_text": "Rewatch"
             }),
-            dev_post_body.decode("utf-8"),
+            prod_post_body.decode("utf-8"),
             msg="\n\n flair_text not in post body"
         )
+        self.assertNotIn(
+            "flair_text",
+            dev_post_body.decode("utf-8"),
+            msg="\n\nflair_text not allowed for test subreddit"
+        )
         
-
         
     @patch("rewatch.repo.rewatch_backend.urlopen")
     def test_submit_reddit_post(self, 

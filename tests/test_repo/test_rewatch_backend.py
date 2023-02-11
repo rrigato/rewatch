@@ -282,6 +282,37 @@ class TestRewatchBackend(unittest.TestCase):
             msg="\n\n incorrect subreddit in post body"
         )
 
+
+    def test_reddit_post_body_flags(self):
+        """dev/test flags by subreddit"""
+        from fixtures.rewatch_fixtures import mock_message_board_posts
+        from rewatch.repo.rewatch_backend import reddit_post_body
+
+
+        mock_dev_post = mock_message_board_posts(1)[0]
+        mock_prod_post = mock_message_board_posts(1)[0]
+        mock_dev_post.subreddit = "test"
+        mock_prod_post.subreddit = "toonami"
+        
+
+        dev_post_body = reddit_post_body(
+            mock_dev_post
+        )
+        prod_post_body = reddit_post_body(
+            mock_prod_post
+        )
+
+
+        self.assertIn(
+            urlencode({
+                "flair_text": "Rewatch"
+            }),
+            dev_post_body.decode("utf-8"),
+            msg="\n\n flair_text not in post body"
+        )
+        
+
+        
     @patch("rewatch.repo.rewatch_backend.urlopen")
     def test_submit_reddit_post(self, 
         urlopen_mock: MagicMock):

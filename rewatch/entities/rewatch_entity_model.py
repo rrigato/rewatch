@@ -11,6 +11,7 @@ class MessageBoardPost():
         self.post_message = None
         self.post_title = None
         self.show_name = None
+        self.subreddit = None
 
     @property
     def post_date(self) -> Optional[date]:
@@ -65,6 +66,20 @@ class MessageBoardPost():
                 "must be a str or None"
             )
         self._show_name = show_name
+
+    @property
+    def subreddit(self) -> Optional[str]:
+        return(self._subreddit)
+
+    @subreddit.setter
+    def subreddit(self, subreddit: Optional[str]):
+        if type(subreddit) not in (
+            str, type(None)):
+            raise TypeError(
+                "MessageBoardPost - subreddit datatype " +
+                "must be a str or None"
+            )
+        self._subreddit = subreddit
 
 
 class SecretConfig():

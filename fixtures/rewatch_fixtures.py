@@ -10,14 +10,7 @@ from rewatch.entities.rewatch_entity_model import MessageBoardPost, SecretConfig
 def mock_message_board_posts(
         number_of_entities: int
     ) -> list[MessageBoardPost]:
-    """Creates a list of mock MessageBoardPost entities
-
-        Parameters
-        ----------
-        number_of_entities
-            defaults to 3 
-        
-    """
+    """Creates a list of mock MessageBoardPost entities"""
     mock_entities_list = []
 
     for entity_num in range(number_of_entities):

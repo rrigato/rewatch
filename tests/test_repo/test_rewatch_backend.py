@@ -245,21 +245,23 @@ class TestRewatchBackend(unittest.TestCase):
         from fixtures.rewatch_fixtures import mock_message_board_posts
         from rewatch.repo.rewatch_backend import reddit_post_body
 
-        mock_selected_post = mock_message_board_posts(1)[0]
+
+        mock_post = mock_message_board_posts(1)[0]
+
 
         reddit_api_post_body = reddit_post_body(
-            mock_selected_post
+            mock_post
         )
         self.assertIn(
             urlencode(
-                (""), (mock_selected_post.post_message)
+                (""), (mock_post.post_message)
             ),
             reddit_api_post_body.decode("utf-8"),
             msg="\n\n post_message not in post body"
         )
         self.assertIn(
             urlencode({
-                "title": mock_selected_post.post_title
+                "title": mock_post.post_title
             }),
             reddit_api_post_body.decode("utf-8"),
             msg="\n\n post_title not in post body"
@@ -328,38 +330,6 @@ class TestRewatchBackend(unittest.TestCase):
 
 
         self.assertIsNone(submission_error)
-
-        urlopen_args, urlopen_kwargs = urlopen_mock.call_args
-
-        self.assertIn(
-            urlencode(
-                (""), (mock_selected_post.post_message)
-            ),
-            urlopen_kwargs["data"].decode("utf-8"),
-            msg="\n\n post_message not in post body"
-        )
-        self.assertIn(
-            urlencode({
-                "title": mock_selected_post.post_title
-            }),
-            urlopen_kwargs["data"].decode("utf-8"),
-            msg="\n\n post_title not in post body"
-        )
-        
-        self.assertIn(
-            urlencode({
-                "flair_text": "Rewatch"
-            }),
-            urlopen_kwargs["data"].decode("utf-8"),
-            msg="\n\n flair_text not in post body"
-        )
-        self.assertIn(
-            urlencode({
-                "sr": "toonami"
-            }),
-            urlopen_kwargs["data"].decode("utf-8"),
-            msg="\n\n incorrect subreddit in post body"
-        )
         self.assertEqual(read_mock.call_count, 2)
 
 

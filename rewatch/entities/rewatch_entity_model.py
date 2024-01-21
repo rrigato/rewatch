@@ -26,6 +26,20 @@ class MessageBoardPost():
         self._post_date = post_date
 
     @property
+    def post_flair(self) -> Optional[str]:
+        return(self._post_flair)
+
+    @post_flair.setter
+    def post_flair(self, post_flair: Optional[str]):
+        if type(post_flair) not in (
+            str, type(None)):
+            raise TypeError(
+                "MessageBoardPost - post_flair datatype " +
+                "must be a str or None"
+            )
+        self._post_flair = post_flair
+
+    @property
     def post_message(self) -> Optional[str]:
         return(self._post_message)
 

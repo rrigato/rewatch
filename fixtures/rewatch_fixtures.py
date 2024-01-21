@@ -41,6 +41,7 @@ def mock_message_board_posts(
         mock_entity = MessageBoardPost()
 
         mock_entity.post_date = date.fromisoformat("2014-01-04")
+        mock_entity.post_flair = f"mock post_flair {entity_num}"
         mock_entity.post_message = f"mock post_message {entity_num}"
         mock_entity.post_title = f"mock post_title {entity_num}"
         mock_entity.show_name = f"mock show_name {entity_num}"

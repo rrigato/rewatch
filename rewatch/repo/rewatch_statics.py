@@ -16,9 +16,9 @@ Please make sure to mark spoilers for the show and future chapters accordingly.
 
 
 
-```ex: [Ep. 1 Spoiler](#s \"spoiler-text\")```  
+```ex: Ep. 1 Spoiler >!a really big spoiler!<```  
 
-Becomes: [Ep. 1 Spoiler](#s \"spoiler-text\")
+Becomes: Ep. 1 Spoiler >!a really big spoiler!<
 
 
 ---"""

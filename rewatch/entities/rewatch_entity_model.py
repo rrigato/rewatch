@@ -1,4 +1,3 @@
-from copy import deepcopy
 from datetime import date
 from typing import Optional
 
@@ -7,11 +6,27 @@ class MessageBoardPost():
     """business rules representing a rewatch thread"""
     def __init__(self):
         """Initialize all attributes to None"""
+        self.flair_id = None
         self.post_date = None
         self.post_message = None
         self.post_title = None
         self.show_name = None
         self.subreddit = None
+
+    @property
+    def flair_id(self) -> Optional[str]:
+        """flair is just a tag of a post in reddit"""
+        return(self._flair_id)
+
+    @flair_id.setter
+    def flair_id(self, flair_id: Optional[str]):
+        if type(flair_id) not in (
+            str, type(None)):
+            raise TypeError(
+                "MessageBoardPost - flair_id datatype " +
+                "must be a str or None"
+            )
+        self._flair_id = flair_id
 
     @property
     def post_date(self) -> Optional[date]:
@@ -24,20 +39,6 @@ class MessageBoardPost():
                 "TelevisionRating - post_date datatype " +
                 "must be a date or None")
         self._post_date = post_date
-
-    @property
-    def post_flair(self) -> Optional[str]:
-        return(self._post_flair)
-
-    @post_flair.setter
-    def post_flair(self, post_flair: Optional[str]):
-        if type(post_flair) not in (
-            str, type(None)):
-            raise TypeError(
-                "MessageBoardPost - post_flair datatype " +
-                "must be a str or None"
-            )
-        self._post_flair = post_flair
 
     @property
     def post_message(self) -> Optional[str]:

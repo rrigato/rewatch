@@ -29,7 +29,7 @@ Parameters:
 
   pythonRuntime:
     Type: String
-    Default: python3.9
+    Default: python3.11
 
 
 Resources:

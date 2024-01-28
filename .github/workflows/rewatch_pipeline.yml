@@ -8,9 +8,6 @@ jobs:
   run-build-test:
     runs-on: ubuntu-latest
     name: Build and tests application code and updates archives to s3
-    defaults:
-      run:
-        working-directory: ./static
     steps:
       - name: checkout-current-branch
         uses: actions/checkout@v3
@@ -26,6 +23,8 @@ jobs:
       - name: upload-webpack-artifacts
         shell: bash
         env: 
+          AWS_ACCESS_KEY_ID: ${{secrets.PERSISTANT_STORAGE_ID}}
           PROJECT_NAME: 'rewatch'
           REGION_NAME: 'us-east-1'
+          AWS_SECRET_ACCESS_KEY: ${{secrets.PERSISTANT_STORAGE_KEY}}
         run: '../.github/scripts/rewatch_build_test.sh'

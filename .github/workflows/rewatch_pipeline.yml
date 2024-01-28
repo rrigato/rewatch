@@ -1,0 +1,23 @@
+name: rewatch application pipeline
+on: 
+  push: 
+    branches:
+      - master
+
+jobs:
+  run-build-test:
+    runs-on: ubuntu-latest
+    name: Build and tests application code and updates archives to s3
+    defaults:
+      run:
+        working-directory: ./static
+    steps:
+      - name: checkout-current-branch
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+      
+

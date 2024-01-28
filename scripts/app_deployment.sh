@@ -6,7 +6,6 @@ set -e
 export PROJECT_NAME="rewatch"
 export BUCKET_NAME="${PROJECT_NAME}-app-artifacts"
 export DEPLOYMENT_PACKAGE="${PROJECT_NAME}_deployment_package.zip"
-export FUNCTION_NAME="${PROJECT_NAME}-reddit-post"
 export REGION_NAME="us-east-1"
 
 

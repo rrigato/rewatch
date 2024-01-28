@@ -21,4 +21,11 @@ jobs:
           python-version: 3.11
       
       - name: script-execution-permissions
-        run: chmod +x '.github/scripts/rewatch_build_test.sh'
+        run: chmod +x '../.github/scripts/rewatch_build_test.sh'
+
+      - name: upload-webpack-artifacts
+        shell: bash
+        env: 
+          PROJECT_NAME: 'rewatch'
+          REGION_NAME: 'us-east-1'
+        run: '../.github/scripts/rewatch_build_test.sh'

@@ -2,6 +2,12 @@
 
 set -e
 
+export PROJECT_NAME="rewatch"
+export BUCKET_NAME="${PROJECT_NAME}-app-artifacts"
+export DEPLOYMENT_PACKAGE="${PROJECT_NAME}_deployment_package.zip"
+export REGION_NAME="us-east-1"
+
+
 python -m venv avenv
 
 source avenv/bin/activate
@@ -18,3 +24,13 @@ fi
 
 
 python -m unittest
+
+
+zip $DEPLOYMENT_PACKAGE -r $PROJECT_NAME  \
+    -x *__pycache__*  --quiet
+
+zip -u $DEPLOYMENT_PACKAGE -j handlers/${PROJECT_NAME}_handler.py  \
+    -x *__pycache__* --quiet
+
+
+aws sts get-caller-identity

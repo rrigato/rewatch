@@ -52,7 +52,7 @@ aws lambda update-function-code \
 
 
 
-git push origin master
+git push origin dev
 
 echo "----------------------"
 echo "deployment successful"

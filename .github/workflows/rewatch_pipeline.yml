@@ -27,18 +27,18 @@ jobs:
       - name: script-execution-permissions
         run: chmod +x '.github/scripts/rewatch_build_test.sh'
 
-      # TODO - assume role
-      # - name: Assumes GitHub Actions role
-      #   uses: aws-actions/configure-aws-credentials@v4
-      #   with:
-      #     audience: sts.amazonaws.com
-      #     aws-region: ${{vars.REGION_NAME}}
-      #     role-to-assume: arn:aws:iam::${{secrets.AWS_ACCOUNT_ID}}:role/rewatch-github-actions-role
+      
+      - name: Assumes GitHub Actions role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: ${{vars.REGION_NAME}}
+          role-to-assume: arn:aws:iam::${{secrets.AWS_ACCOUNT_ID}}:role/${{vars.PROJECT_NAME}}-github-actions-role
 
       - name: test-and-build-deployment-archive
         shell: bash
         env: 
           AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
-          PROJECT_NAME: 'rewatch'
+          PROJECT_NAME: ${{vars.PROJECT_NAME}}
           REGION_NAME: ${{vars.REGION_NAME}}
         run: '.github/scripts/rewatch_build_test.sh'

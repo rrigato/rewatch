@@ -41,18 +41,13 @@ Resources:
                 token.actions.githubusercontent.com:aud: !Ref oidcAudience
               StringLike:
                 token.actions.githubusercontent.com:sub: !Sub repo:${githubUser}/${projectName}:*
+      Description: 'Role for GitHub Actions to assume'
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_dynamodb
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_lambda
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_s3_policy
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_secrets_manager_get
+      RoleName: !Sub ${projectName}-github-actions-role
 
-  projectRolePermissionsPolicies: 
-    Type: 'AWS::IAM::Policy'
-    Properties: 
-      PolicyName: 'githubActionsPermissions'
-      PolicyDocument: 
-        Version: '2012-10-17'
-        Statement: 
-          - Effect: 'Allow'
-            Action:
-              - 'dynamodb:ListTables'
-              - 'dynamodb:ListBackups'
-            Resource: '*'
-      Roles: 
-        - Ref: 'projectRoleForGitHubActions'
+
+

@@ -8,6 +8,7 @@ openssl s_client -servername token.actions.githubusercontent.com \
 -showcerts -connect token.actions.githubusercontent.com:443
 
 # obtains the root certificate thumbprint
+# sed line takes everything after the = sign and removes the colons and converts to lowercase 
 openssl x509 -in github_root_cert.crt -fingerprint -sha1 -noout \
 | sed 's/.*=//;s/://g;y/ABCDEF/abcdef/' \
 | pbcopy

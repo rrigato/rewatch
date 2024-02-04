@@ -6,12 +6,15 @@ Parameters:
     Default: rrigato
     Description: 'GitHub organization name'
     Type: String
-  githubRepo:
-    Default: rewatch
-    Type: String
+
   oidcAudience:
     Default: 'sts.amazonaws.com'
     Description: 'The audience for the OIDC provider'
+    Type: String
+
+  projectName:
+    Default: rewatch
+    Description: 'Same as github repository name'
     Type: String
 
 Resources:
@@ -24,7 +27,7 @@ Resources:
       ThumbprintList:
         - 1b511abead59c6ce207077c0bf0e0043b1382612
 
-  projectIamRole:
+  projectRoleForGitHubActions:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -37,4 +40,14 @@ Resources:
               StringEquals:
                 token.actions.githubusercontent.com:aud: !Ref oidcAudience
               StringLike:
-                token.actions.githubusercontent.com:sub: !Sub repo:${githubUser}/${githubRepo}:*
+                token.actions.githubusercontent.com:sub: !Sub repo:${githubUser}/${projectName}:*
+      Description: 'Role for GitHub Actions to assume'
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_dynamodb
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_lambda
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_s3_policy
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_secrets_manager_get
+      RoleName: !Sub ${projectName}-github-actions-role
+
+
+

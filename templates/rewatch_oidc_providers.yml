@@ -1,6 +1,19 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation template for creating an OIDC provider for GitHub Actions'
 
+Parameters:
+  githubUser:
+    Default: rrigato
+    Description: 'GitHub organization name'
+    Type: String
+  githubRepo:
+    Default: rewatch
+    Type: String
+  oidcAudience:
+    Default: 'sts.amazonaws.com'
+    Description: 'The audience for the OIDC provider'
+    Type: String
+
 Resources:
   githubOidc:
     Type: AWS::IAM::OIDCProvider
@@ -11,3 +24,17 @@ Resources:
       ThumbprintList:
         - 1b511abead59c6ce207077c0bf0e0043b1382612
 
+  projectIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !Ref githubOidc
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: !Ref oidcAudience
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:${githubUser}/${githubRepo}:*

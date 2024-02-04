@@ -46,7 +46,7 @@ Resources:
         - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_dynamodb
         - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_lambda
         - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_s3_policy
-        - !Sub arn:aws:iam::${AWS::AccountId}:policy/${projectName}_secrets_manager_get
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/secrets_manager_get
       RoleName: !Sub ${projectName}-github-actions-role
 
 

@@ -32,5 +32,3 @@ zip $DEPLOYMENT_PACKAGE -r $PROJECT_NAME  \
 zip -u $DEPLOYMENT_PACKAGE -j handlers/${PROJECT_NAME}_handler.py  \
     -x *__pycache__* --quiet
 
-
-aws sts get-caller-identity

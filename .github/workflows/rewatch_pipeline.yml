@@ -23,8 +23,6 @@ jobs:
       - name: test-and-build-deployment-archive
         shell: bash
         env: 
-          AWS_ACCESS_KEY_ID: ${{secrets.PERSISTANT_STORAGE_ID}}
           PROJECT_NAME: 'rewatch'
           REGION_NAME: 'us-east-1'
-          AWS_SECRET_ACCESS_KEY: ${{secrets.PERSISTANT_STORAGE_KEY}}
         run: '.github/scripts/rewatch_build_test.sh'

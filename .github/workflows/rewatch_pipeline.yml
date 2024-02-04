@@ -9,15 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and tests application code and updates archives to s3
     steps:
-      # confirms the value of ${{vars.PROJECT_NAME}} is 'rewatch'
+      # confirms the value of ${{ vars.PROJECT_NAME }} is 'rewatch'
       - name: validate-project-name
         run: |
-          if [ ${{vars.PROJECT_NAME}} != 'rewatch' ]; then
+          if [ ${{ vars.PROJECT_NAME }} != 'rewatch' ]; then
             echo "Project name is not 'rewatch'"
             exit 1
           fi
       - name: checkout-current-branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v2
@@ -32,13 +32,13 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           audience: sts.amazonaws.com
-          aws-region: ${{vars.REGION_NAME}}
-          role-to-assume: arn:aws:iam::${{secrets.AWS_ACCOUNT_ID}}:role/${{vars.PROJECT_NAME}}-github-actions-role
+          aws-region: ${{ vars.REGION_NAME }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ vars.PROJECT_NAME }}-github-actions-role
 
       - name: test-and-build-deployment-archive
         shell: bash
         env: 
           AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
-          PROJECT_NAME: ${{vars.PROJECT_NAME}}
-          REGION_NAME: ${{vars.REGION_NAME}}
+          PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+          REGION_NAME: ${{ vars.REGION_NAME }}
         run: '.github/scripts/rewatch_build_test.sh'

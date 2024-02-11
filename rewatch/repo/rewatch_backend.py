@@ -44,6 +44,7 @@ def _populate_message_posts(dynamodb_query_response: Dict,
         
         new_message_post = MessageBoardPost()
 
+        new_message_post.flair_id = dynamodb_item["flair_id"]
         new_message_post.post_date = post_date
         new_message_post.post_message = dynamodb_item["post_message"]
         new_message_post.post_title = dynamodb_item["post_title"]

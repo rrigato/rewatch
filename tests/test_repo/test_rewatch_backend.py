@@ -56,6 +56,11 @@ class TestRewatchBackend(unittest.TestCase):
             self.assertIsInstance(
                 message_board_post, 
                 MessageBoardPost
+            )
+
+            self.assertIsNotNone(
+                message_board_post.flair_id,
+                msg="""\n\nflair_id attribute not populated from dynamodb_response"""
             )             
         
         [

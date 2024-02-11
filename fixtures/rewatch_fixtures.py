@@ -93,6 +93,7 @@ def mock_dynamodb_query_response(
             {
                 "PK": "rewatch#3005-11-09",
                 "SK": "showname",
+                "flair_id": "mock_flair0",
                 "post_title": "Episode 1 and 2",
                 "post_message": "Markdown for Episode 1 and 2",
                 "subreddit": "Toonami"
@@ -101,6 +102,7 @@ def mock_dynamodb_query_response(
             {
                 "PK": "rewatch#3005-11-16",
                 "SK": "showname",
+                "flair_id": "mock_flair1",
                 "post_title": "Episode 3 and 4",
                 "post_message": "Markdown for Episode 3 and 4",
                 "subreddit": "Toonami"
@@ -109,6 +111,7 @@ def mock_dynamodb_query_response(
             {
                 "PK": "rewatch#3005-11-23",
                 "SK": "showname",
+                "flair_id": "mock_flair2",
                 "post_title": "Episode 5 and 6",
                 "post_message": "Markdown for Episode 5 and 6",
                 "subreddit": "Toonami"

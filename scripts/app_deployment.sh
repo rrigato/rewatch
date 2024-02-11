@@ -25,33 +25,6 @@ python -m unittest
 
 deactivate
 
-if [ -e $DEPLOYMENT_PACKAGE ]; then
-    rm $DEPLOYMENT_PACKAGE
-fi
-
-zip $DEPLOYMENT_PACKAGE -r $PROJECT_NAME  \
-    -x *__pycache__*  --quiet
-
-zip -u $DEPLOYMENT_PACKAGE -j handlers/${PROJECT_NAME}_handler.py  \
-    -x *__pycache__* --quiet
-
-
-aws s3api put-object --bucket $BUCKET_NAME \
-    --region $REGION_NAME \
-    --key $PROJECT_NAME/$DEPLOYMENT_PACKAGE \
-    --body $DEPLOYMENT_PACKAGE \
-    --tagging "cloudformation=no&project=${PROJECT_NAME}&keep=yes"
-
-
-aws lambda update-function-code \
-    --region $REGION_NAME \
-    --function-name  "${PROJECT_NAME}-handler" \
-    --s3-bucket $BUCKET_NAME \
-    --s3-key $PROJECT_NAME/$DEPLOYMENT_PACKAGE \
-    --no-cli-pager
-
-
-
 git push origin dev
 
 echo "----------------------"

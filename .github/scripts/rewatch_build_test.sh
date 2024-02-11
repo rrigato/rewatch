@@ -2,7 +2,6 @@
 
 set -e
 
-export PROJECT_NAME="rewatch"
 export BUCKET_NAME="${PROJECT_NAME}-app-artifacts"
 export DEPLOYMENT_PACKAGE="${PROJECT_NAME}_deployment_package.zip"
 
@@ -31,4 +30,8 @@ zip $DEPLOYMENT_PACKAGE -r $PROJECT_NAME  \
 zip -u $DEPLOYMENT_PACKAGE -j handlers/${PROJECT_NAME}_handler.py  \
     -x *__pycache__* --quiet
 
-aws sts get-caller-identity
+aws s3api put-object --bucket $BUCKET_NAME \
+    --region $REGION_NAME \
+    --key $PROJECT_NAME/$DEPLOYMENT_PACKAGE \
+    --body $DEPLOYMENT_PACKAGE \
+    --tagging "cloudformation=no&project=${PROJECT_NAME}&keep=yes"

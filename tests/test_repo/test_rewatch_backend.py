@@ -277,14 +277,15 @@ class TestRewatchBackend(unittest.TestCase):
 
 
     def test_reddit_post_body_flags(self):
-        """dev/test flags by subreddit"""
+        """flair_id included in post body when not None"""
         from fixtures.rewatch_fixtures import mock_message_board_posts
         from rewatch.repo.rewatch_backend import reddit_post_body
 
         mock_dev_post = mock_message_board_posts(1)[0]
         mock_prod_post = mock_message_board_posts(1)[0]
-        mock_dev_post.subreddit = "test"
-        mock_prod_post.subreddit = "Toonami"
+        mock_dev_post.flair_id = None
+        mock_flair_id = "mock_flair_id"
+        mock_prod_post.flair_id = mock_flair_id
         
 
         dev_post_body = reddit_post_body(
@@ -297,16 +298,12 @@ class TestRewatchBackend(unittest.TestCase):
 
         self.assertIn(
             urlencode({
-                "flair_text": "Rewatch"
+                "flair_id": mock_flair_id
             }),
             prod_post_body.decode("utf-8"),
-            msg="\n\n flair_text not in post body"
+            msg="\n\n flair_id not in post body"
         )
-        self.assertNotIn(
-            "flair_text",
-            dev_post_body.decode("utf-8"),
-            msg="\n\nflair_text not allowed for test subreddit"
-        )
+
         
         
     @patch("rewatch.repo.rewatch_backend.urlopen")

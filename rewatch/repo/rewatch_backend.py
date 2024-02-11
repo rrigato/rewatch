@@ -244,8 +244,8 @@ def reddit_post_body(post_to_submit: MessageBoardPost) -> bytes:
         "type": "json"
     }
 
-    if post_to_submit.subreddit == "Toonami":
-        post_body["flair_text"] = "Rewatch"
+    if post_to_submit.flair_id is not None:
+        post_body["flair_id"] = post_to_submit.flair_id
 
     logging.info(f"post_submission_post_body - post_body")
 

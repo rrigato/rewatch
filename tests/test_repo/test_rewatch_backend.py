@@ -1,7 +1,7 @@
 import json
 import unittest
 from copy import deepcopy
-from datetime import datetime
+from datetime import date, datetime
 from unittest.mock import MagicMock, patch
 from urllib.parse import urlencode
 
@@ -470,3 +470,22 @@ class TestRewatchBackend(unittest.TestCase):
         self.assertIsInstance(remove_posts_response, str)
 
         
+    def test_populte_message_posts_handles_no_flair_id(self):
+        """flair_id key does not exist in dyanmodb_query_response"""
+        from rewatch.repo.rewatch_backend import _populate_message_posts
+        from fixtures.rewatch_fixtures import mock_dynamodb_query_response
+
+        mock_dynamodb_response = mock_dynamodb_query_response()
+
+        mock_dynamodb_response["Items"][0].pop("flair_id")
+
+
+        mock_message_posts = _populate_message_posts(
+            mock_dynamodb_response,
+            date(3005, 11, 28)
+        )
+
+
+        self.assertIsNone(
+            mock_message_posts[0].flair_id
+        )

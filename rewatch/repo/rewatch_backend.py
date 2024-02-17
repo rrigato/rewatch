@@ -219,7 +219,10 @@ def _response_validation(api_response_body: Dict) -> None:
         "success": <boolean>
 
     }'''
-
+    logging.info(
+        f"_response_validation - api_response_body - \n"
+        + json.dumps(api_response_body, indent=4)
+    )
     if api_response_body["success"] != True:
         logging.info(f"_response_validation - raising errror")
         logging.error(api_response_body)

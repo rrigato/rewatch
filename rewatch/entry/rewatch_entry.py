@@ -30,7 +30,7 @@ def create_reddit_post() -> Optional[str]:
     
     if len(posts_for_today) == 0:
         logging.info(f"create_reddit_post - short circuit no posts")
-        return("No posts for today")
+        return(None)
 
     logging.info(f"create_reddit_post - len posts_for_today" +
     f"{len(posts_for_today)}")

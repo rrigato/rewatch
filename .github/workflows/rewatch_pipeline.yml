@@ -54,5 +54,5 @@ jobs:
           AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
           PROJECT_NAME: ${{vars.PROJECT_NAME}}
           REGION_NAME: ${{vars.REGION_NAME}}
-        run: 'scripts/rewatch_build_test.sh'
+        run: 'scripts/invoke_rewatch_handler.sh'
 

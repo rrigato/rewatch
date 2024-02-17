@@ -47,9 +47,8 @@ class TestRewatchEntry(unittest.TestCase):
         submit_reddit_post_mock: MagicMock,
         remove_post_mock: MagicMock
         ):
-        """no posts returns None"""
-        from fixtures.rewatch_fixtures import (mock_message_board_posts,
-                                               mock_secret_config)
+        """no errors when no posts are found"""
+        from fixtures.rewatch_fixtures import mock_secret_config
         from rewatch.entry.rewatch_entry import create_reddit_post
 
 

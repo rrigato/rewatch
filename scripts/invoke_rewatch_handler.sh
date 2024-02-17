@@ -7,5 +7,6 @@ aws lambda invoke \
     --cli-binary-format raw-in-base64-out \
     --payload '{}' \
     --region $REGION_NAME \
-    --no-cli-pager
+    --no-cli-pager \
+     /dev/stdout
 

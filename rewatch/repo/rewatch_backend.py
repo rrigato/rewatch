@@ -31,7 +31,7 @@ def _post_text_markup() -> str:
 
 
 
-def _populate_message_posts(dynamodb_query_response: Dict,
+def _populate_message_posts(dynamodb_query_response: dict,
     post_date: date
     ) -> List[MessageBoardPost]:
     """populates entity from external persisted storage
@@ -39,6 +39,8 @@ def _populate_message_posts(dynamodb_query_response: Dict,
     logging.info(f"_populate_message_posts - invocation begin")
     
     message_board_posts: List[MessageBoardPost] = []
+
+    dynamodb_item: dict
 
     for dynamodb_item in dynamodb_query_response["Items"]:
         

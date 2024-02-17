@@ -489,3 +489,5 @@ class TestRewatchBackend(unittest.TestCase):
         self.assertIsNone(
             mock_message_posts[0].flair_id
         )
+
+        

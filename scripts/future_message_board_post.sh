@@ -21,9 +21,9 @@ aws dynamodb put-item \
     --table-name rewatch_shared_table \
     --item '{
         "PK": {"S": "rewatch#'"$post_date"'"}, 
-        "SK": {"S": "cyborg009"}, 
+        "SK": {"S": "'"$item_sort_key"'"}, 
         "flair_id": {"S": "'"$rewatch_flair_id"'"},
-        "post_title": {"S": "Cyborg 009 '"$first_episode"' and '"$second_episode"' Rewatch"},
+        "post_title": {"S": "'"$show_title_name"' '"$first_episode"' and '"$second_episode"' Rewatch"},
         "post_message": {
                 "S": "'"$table_title"'**'"$first_episode_title"'** | ['"$first_episode"']('"$first_episode_link"')\n**'"$second_episode_title"'** | ['"$second_episode"']('"$second_episode_link"')"
             },

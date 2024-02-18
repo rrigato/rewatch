@@ -17,5 +17,7 @@ pip install -r requirements/requirements-dev.txt
 python -m unittest
 ```
 
+# application-link
+[view an example](https://www.reddit.com/r/Toonami/comments/1ao9p0t/cyborg_009_episode_1_and_episode_2_rewatch/) of the message board post output
 
 Since the human condition is such that we always prefer to watch the same tv series over again since it is good and familiar as opposed to trying something new we might not like, this application is desperately needed.

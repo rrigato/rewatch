@@ -123,8 +123,8 @@ Resources:
     Type: AWS::Events::Rule
     Properties: 
       Description: !Sub Triggers lambda function ${projectName}-handler 
-      # 23:00 pm UTC+0 every Friday
-      ScheduleExpression: cron(0 23 ? * 6 *)
+      # 22:00 pm UTC+0 every day
+      ScheduleExpression: cron(0 22 ? * * *)
       State: ENABLED
       Targets: 
         - 

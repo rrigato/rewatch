@@ -3,11 +3,15 @@
 #exits program immediately if a command is not sucessful
 set -e
 
-export PROJECT_NAME="rewatch"
-export BUCKET_NAME="${PROJECT_NAME}-app-artifacts"
-export DEPLOYMENT_PACKAGE="${PROJECT_NAME}_deployment_package.zip"
-export REGION_NAME="us-east-1"
+if [ -z "$1" ]; then
+    echo "Missing commit message arguement 1"
+    exit 1
+fi
 
+
+git add -A
+
+git commit -m "$1"
 
 
 source avenv/bin/activate

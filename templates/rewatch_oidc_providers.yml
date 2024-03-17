@@ -22,7 +22,7 @@ Resources:
     Type: AWS::IAM::OIDCProvider
     Properties:
       Url: https://token.actions.githubusercontent.com
-      ClientIdList: 
+      ClientIdList:
         - sts.amazonaws.com
       ThumbprintList:
         - 1b511abead59c6ce207077c0bf0e0043b1382612
@@ -50,4 +50,8 @@ Resources:
       RoleName: !Sub ${projectName}-github-actions-role
 
 
+Outputs:
+  githubOidcProviderArn:
+    Description: 'The ARN of the OIDC provider for GitHub Actions'
+    Value: !GetAtt githubOidc.Arn
 

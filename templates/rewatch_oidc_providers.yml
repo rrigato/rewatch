@@ -54,4 +54,5 @@ Outputs:
   githubOidcProviderArn:
     Description: 'The ARN of the OIDC provider for GitHub Actions'
     Value: !GetAtt githubOidc.Arn
-
+    Export:
+      Name: 'githubOidcProviderArn'

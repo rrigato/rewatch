@@ -33,7 +33,7 @@ echo "tag_message - ${tag_message}"
 
 
 # only add a tag on the 1st day of the month
-if [ $(date +%d) = "01" ]; then
+if [ $(date +%d) = "03" ]; then
 
     git tag $new_tag -m "$tag_message"
     echo "added unnecessary tag"

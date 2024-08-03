@@ -32,12 +32,16 @@ tag_message="prevent_disable - ${tag_without_minor_version}${new_minor_version}"
 echo "tag_message - ${tag_message}"
 
 
+# only add a tag on the 1st day of the month
+if [ $(date +%d) = "03" ]; then
 
-git tag $new_tag -m "$tag_message"
-echo "added unnecessary tag"
+    git tag $new_tag -m "$tag_message"
+    echo "added unnecessary tag"
 
-git push origin $new_tag
-echo "tag addition complete"
+    git push origin $new_tag
+    echo "tag addition complete"
+
+fi
 
 
 git tag

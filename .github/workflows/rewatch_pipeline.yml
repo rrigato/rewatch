@@ -1,13 +1,13 @@
 name: rewatch application pipeline
-on: 
-  push: 
+on:
+  push:
     branches:
       - master
 jobs:
   run-build-test:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
 
     name: Build and tests application code and updates archives to s3
@@ -26,13 +26,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.11
-      
+
       - name: make-scripts-executable
         run: |
           chmod +x 'scripts/invoke_rewatch_handler.sh'
           chmod +x 'scripts/rewatch_build_test.sh'
 
-      
+
       - name: assume-github-actions-role
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -42,7 +42,7 @@ jobs:
 
       - name: test-and-build-deployment-archive
         shell: bash
-        env: 
+        env:
           AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
           PROJECT_NAME: ${{vars.PROJECT_NAME}}
           REGION_NAME: ${{vars.REGION_NAME}}
@@ -50,9 +50,21 @@ jobs:
 
       - name: invoke-${{vars.PROJECT_NAME}}-handler
         shell: bash
-        env: 
+        env:
           AWS_ACCOUNT_ID: ${{secrets.AWS_ACCOUNT_ID}}
           PROJECT_NAME: ${{vars.PROJECT_NAME}}
           REGION_NAME: ${{vars.REGION_NAME}}
         run: 'scripts/invoke_rewatch_handler.sh'
 
+      ##################
+      #Unnecessary orchestration because public workflows are auto
+      #disabled after 60 days
+      #
+      #https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow
+      ##################
+      - name: script-execution-permissions-disable
+        run: chmod +x scripts/prevent_disable.sh
+
+      - name: prevent-disabled-workflow
+        shell: bash
+        run: scripts/prevent_disable.sh

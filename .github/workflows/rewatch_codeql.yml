@@ -63,9 +63,6 @@ jobs:
       #
       #https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow
       ##################
-      - name: script-execution-permissions-disable
-        run: chmod +x scripts/prevent_disable.sh
-
       - name: prevent-disabled-workflow
         shell: bash
         run: scripts/prevent_disable.sh

@@ -33,8 +33,8 @@ tag_message="prevent_disable - ${tag_without_minor_version}${new_minor_version}"
 echo "tag_message - ${tag_message}"
 
 
-# only add a tag on the 10th day of the month
-if [ $(date +%d) = "10" ]; then
+# only add a tag on the 1st day of the month
+if [ $(date +%d) = "01" ]; then
 
     git tag $new_tag -m "$tag_message"
     echo "added unnecessary tag"

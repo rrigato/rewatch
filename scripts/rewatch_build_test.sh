@@ -44,13 +44,3 @@ aws lambda update-function-code \
 aws lambda wait function-updated \
     --region "$REGION_NAME" \
     --function-name "${PROJECT_NAME}-handler"
-
-aws lambda update-function-configuration \
-    --region "$REGION_NAME" \
-    --function-name "${PROJECT_NAME}-handler" \
-    --runtime python3.14 \
-    --no-cli-pager
-
-aws lambda wait function-updated \
-    --region "$REGION_NAME" \
-    --function-name "${PROJECT_NAME}-handler"

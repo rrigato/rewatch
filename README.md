@@ -4,7 +4,7 @@ App that posts television series rewatch threads in online message boards on a r
 
 1) Create a virtual environment and install dependencies:
 ```bash
-python3.14 -m venv avenv
+python3.11 -m venv avenv
 source avenv/bin/activate
 pip install -r requirements/requirements-dev.txt
 ```
@@ -25,16 +25,12 @@ Since the human condition is such that we always prefer to watch the same tv ser
 
 # Deployment
 
-Pushes to `master` deploy the application using Python 3.14. Pull requests run
+Pushes to `master` deploy the application using Python 3.11. Pull requests run
 unit tests, dependency validation, CloudFormation linting, and ZIP packaging
 without AWS credentials or invoking the function.
 
 The deployment ZIP includes the pinned production dependencies. Deployment waits
-for the code update, sets the existing Lambda runtime to `python3.14`, and waits
-for the configuration update before invoking the handler. The GitHub Actions
-role needs `lambda:UpdateFunctionConfiguration` and
-`lambda:GetFunctionConfiguration` in addition to its existing deployment permissions.
-The final invocation can publish a Reddit post scheduled for the current date.
-
-For stacks that explicitly override `pythonRuntime`, update that CloudFormation
-parameter to `python3.14` as well to keep the stack configuration consistent.
+for the code update to finish before invoking the handler. The GitHub Actions
+role needs `lambda:GetFunctionConfiguration` for this wait in addition to its
+existing deployment permissions. The final invocation can publish a Reddit post
+scheduled for the current date. The Lambda runtime remains Python 3.11.

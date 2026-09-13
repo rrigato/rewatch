@@ -14,7 +14,7 @@ Parameters:
   lambdaMemorySize:
     Type: Number
     Default: 256
-    MinValue: 64
+    MinValue: 128
     MaxValue: 10240
 
   lambdaTimeout:
@@ -29,7 +29,7 @@ Parameters:
 
   pythonRuntime:
     Type: String
-    Default: python3.11
+    Default: python3.14
 
 
 Resources:

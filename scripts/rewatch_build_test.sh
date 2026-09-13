@@ -24,11 +24,7 @@ fi
 python -m unittest
 
 
-zip $DEPLOYMENT_PACKAGE -r $PROJECT_NAME  \
-    -x *__pycache__*  --quiet
-
-zip -u $DEPLOYMENT_PACKAGE -j handlers/${PROJECT_NAME}_handler.py  \
-    -x *__pycache__* --quiet
+bash scripts/package_lambda.sh
 
 aws s3api put-object --bucket $BUCKET_NAME \
     --region $REGION_NAME \
@@ -44,3 +40,7 @@ aws lambda update-function-code \
     --s3-key $PROJECT_NAME/$DEPLOYMENT_PACKAGE \
     --no-cli-pager
 
+
+aws lambda wait function-updated \
+    --region "$REGION_NAME" \
+    --function-name "${PROJECT_NAME}-handler"

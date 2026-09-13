@@ -14,7 +14,7 @@ Parameters:
   lambdaMemorySize:
     Type: Number
     Default: 256
-    MinValue: 64
+    MinValue: 128
     MaxValue: 10240
 
   lambdaTimeout:
